@@ -1,0 +1,1881 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>初一低压力学习计划预览</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --panel-soft: #f1f5f3;
+      --ink: #18212f;
+      --muted: #667085;
+      --line: #d9e0e7;
+      --math: #226f54;
+      --english: #315f9b;
+      --chinese: #9b4d3a;
+      --accent: #7a4b9d;
+      --ok: #dff3e7;
+      --warn: #fff1d6;
+      --shadow: 0 12px 32px rgba(22, 34, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 22px 18px;
+      background: #202833;
+      color: #f8fafc;
+      overflow: auto;
+    }
+
+    .brand {
+      margin-bottom: 22px;
+    }
+
+    .brand h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+
+    .side-section {
+      margin-top: 22px;
+    }
+
+    .side-title {
+      margin: 0 0 10px;
+      color: #dbe4ee;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tabs {
+      display: grid;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #f8fafc;
+      text-align: left;
+      padding: 9px 11px;
+      cursor: pointer;
+    }
+
+    .tab-btn[aria-selected="true"] {
+      background: #ffffff;
+      color: #1f2937;
+      border-color: #ffffff;
+    }
+
+    .stats {
+      display: grid;
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+    }
+
+    .stat span {
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+
+    main {
+      min-width: 0;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      margin: 0;
+      max-width: 880px;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 5px;
+      background: #e9eef3;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .segmented button {
+      min-height: 34px;
+      border: 0;
+      border-radius: 6px;
+      padding: 6px 12px;
+      background: transparent;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: #ffffff;
+      color: #111827;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .search {
+      min-height: 42px;
+      width: min(100%, 320px);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .section {
+      padding: 18px;
+    }
+
+    .section + .section {
+      border-top: 1px solid var(--line);
+    }
+
+    .section h3 {
+      margin: 0 0 12px;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 14px;
+    }
+
+    .card.soft {
+      background: var(--panel-soft);
+    }
+
+    .card h4 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .card p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      color: #334155;
+      font-size: 12px;
+    }
+
+    .tag.math {
+      border-color: rgba(34, 111, 84, 0.26);
+      background: rgba(34, 111, 84, 0.08);
+      color: var(--math);
+    }
+
+    .tag.english {
+      border-color: rgba(49, 95, 155, 0.26);
+      background: rgba(49, 95, 155, 0.08);
+      color: var(--english);
+    }
+
+    .tag.chinese {
+      border-color: rgba(155, 77, 58, 0.26);
+      background: rgba(155, 77, 58, 0.08);
+      color: var(--chinese);
+    }
+
+    .day-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .day-title {
+      margin: 0 0 8px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .meta-list li {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .meta-list b {
+      color: #334155;
+    }
+
+    .mood {
+      background: var(--warn);
+    }
+
+    .video {
+      background: #edf7f3;
+    }
+
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .word {
+      min-height: 180px;
+    }
+
+    .word-title {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .word-title strong {
+      font-size: 18px;
+    }
+
+    .word-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .question {
+      min-height: 250px;
+      display: grid;
+      grid-template-rows: auto auto auto auto 1fr;
+      gap: 10px;
+    }
+
+    .question.math-card {
+      border-left: 4px solid var(--math);
+    }
+
+    .question.english-card {
+      border-left: 4px solid var(--english);
+    }
+
+    .question .q {
+      margin: 0;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .options {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .options li {
+      min-height: 36px;
+    }
+
+    .option-btn {
+      width: 100%;
+      min-height: 36px;
+      padding: 7px 9px;
+      border-radius: 6px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .option-btn:hover,
+    .option-btn:focus-visible {
+      border-color: #7a9bbd;
+      background: #eef5fb;
+      outline: 0;
+    }
+
+    .option-btn.selected {
+      border-color: var(--accent);
+      background: #f2eaf8;
+    }
+
+    .option-btn.correct {
+      background: var(--ok);
+      border-color: #9bd8b4;
+      color: #165534;
+      font-weight: 700;
+    }
+
+    .option-btn.wrong {
+      background: #ffe8e6;
+      border-color: #f0a7a0;
+      color: #8d281f;
+      font-weight: 700;
+    }
+
+    .question.answered .option-btn {
+      cursor: default;
+    }
+
+    .quiz-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .mini-btn {
+      min-height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      color: #334155;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .mini-btn:hover,
+    .mini-btn:focus-visible {
+      border-color: #7a9bbd;
+      background: #f8fafc;
+      outline: 0;
+    }
+
+    .quiz-status {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hint-box,
+    .feedback {
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .hint-box p,
+    .feedback p {
+      margin: 5px 0;
+    }
+
+    .feedback-title {
+      color: #334155;
+    }
+
+    .english-mission-section {
+      background: #222a40;
+      color: #eef7ff;
+    }
+
+    .english-mission-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed rgba(126, 214, 223, 0.35);
+      margin-bottom: 18px;
+    }
+
+    .mission-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: #ef3d36;
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.22);
+    }
+
+    .english-mission-head h3 {
+      margin: 0;
+      color: #7ed6df;
+      font-size: 24px;
+    }
+
+    .english-mission-note {
+      margin: 0 0 14px;
+      color: #c8d5e8;
+      font-size: 14px;
+    }
+
+    .english-mission-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .english-task {
+      min-height: 0;
+      border: 0;
+      border-radius: 8px;
+      background: #171c2c;
+      box-shadow: none;
+      padding: 16px;
+      color: #f6f7fb;
+    }
+
+    .english-task .question-line {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      margin: 0;
+      color: #f6f7fb;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .english-task .question-index {
+      color: #f2efe7;
+    }
+
+    .english-task .method-tag {
+      color: #f7f4ec;
+    }
+
+    .english-task .options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .english-task .option-btn {
+      min-height: 48px;
+      border-color: #314766;
+      background: #1e2a3d;
+      color: #c7d1df;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .english-task .option-btn:hover,
+    .english-task .option-btn:focus-visible {
+      border-color: #6aa6c8;
+      background: #26364e;
+    }
+
+    .english-task .option-btn.selected {
+      border-color: #b58ad8;
+      background: #302649;
+    }
+
+    .english-task .option-btn.correct {
+      border-color: #7fd3a0;
+      background: #193d2d;
+      color: #dff7e8;
+    }
+
+    .english-task .option-btn.wrong {
+      border-color: #ec8b83;
+      background: #4a2328;
+      color: #ffe6e3;
+    }
+
+    .english-task .mini-btn {
+      border-color: #314766;
+      background: #1e2a3d;
+      color: #d9e5f3;
+    }
+
+    .english-task .mini-btn:hover,
+    .english-task .mini-btn:focus-visible {
+      border-color: #6aa6c8;
+      background: #26364e;
+    }
+
+    .english-task .quiz-status {
+      color: #9fb0c7;
+    }
+
+    .english-task .hint-box,
+    .english-task .feedback {
+      border-color: #314766;
+      background: #111827;
+      color: #c8d5e8;
+    }
+
+    .english-task .feedback-title,
+    .english-task .answer {
+      color: #8ee3a7;
+    }
+
+    .answer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .answer {
+      color: #165534;
+      font-weight: 800;
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .catalog-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .catalog-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .detail-row {
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .detail-row b {
+      display: block;
+      margin-bottom: 5px;
+      color: #243244;
+      font-size: 13px;
+    }
+
+    .detail-row span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .text-list {
+      display: grid;
+      gap: 6px;
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .text-list li {
+      padding: 7px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #f8fafc;
+      font-size: 13px;
+    }
+
+    .notice {
+      border-left: 4px solid var(--accent);
+      background: #f7f0fb;
+    }
+
+    .roadmap-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .roadmap-day {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+    }
+
+    .roadmap-index {
+      display: grid;
+      gap: 3px;
+      justify-items: start;
+    }
+
+    .roadmap-index strong {
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .roadmap-index span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .roadmap-subjects {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .roadmap-subject {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 9px;
+    }
+
+    .roadmap-subject b {
+      display: block;
+      margin-bottom: 4px;
+      color: #243244;
+      font-size: 13px;
+    }
+
+    .roadmap-subject span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .wrongbook-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .wrongbook-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .wrong-card {
+      border-left: 4px solid #b94d42;
+    }
+
+    .wrong-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .share-steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .share-steps code {
+      display: inline-block;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1080px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+
+      .tabs {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .grid,
+      .grid.two,
+      .catalog-list,
+      .qa-grid,
+      .vocab-grid,
+      .english-task .options,
+      .roadmap-subjects,
+      .roadmap-day,
+      .day-head {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 16px;
+      }
+
+      .sidebar {
+        padding: 16px;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .segmented {
+        width: 100%;
+      }
+
+      .segmented button {
+        flex: 1;
+      }
+
+      .meta-list li {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>学习任务预览</h1>
+        <p>低压力启动，游戏化完成，先让每天都能开始。</p>
+      </div>
+
+      <div class="side-section">
+        <p class="side-title">视图</p>
+        <div class="tabs" id="viewTabs"></div>
+      </div>
+
+      <div class="side-section">
+        <p class="side-title">快速统计</p>
+        <div class="stats" id="stats"></div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <h2 id="pageTitle">Coverage Catalog</h2>
+        <p id="pageIntro"></p>
+      </div>
+
+      <div class="toolbar">
+        <div class="segmented" id="subjectFilter" aria-label="科目筛选">
+          <button type="button" data-subject="all" aria-pressed="true">全部</button>
+          <button type="button" data-subject="math" aria-pressed="false">数学</button>
+          <button type="button" data-subject="english" aria-pressed="false">英语</button>
+          <button type="button" data-subject="chinese" aria-pressed="false">语文</button>
+        </div>
+        <input class="search" id="searchInput" type="search" placeholder="搜索单词、知识点或题干">
+      </div>
+
+      <div id="content" class="panel"></div>
+    </main>
+  </div>
+
+  <script type="application/json" id="plan-data">
+{
+  "planInfo": {
+    "student": "初一女生，基础薄弱，学习启动意愿低，需要低压力游戏化学习",
+    "mathTextbook": "沪科版七年级数学",
+    "englishTextbook": "外研版新标准七年级英语",
+    "englishMethod": "参考刘晓艳《中考英语你还在背单词吗》的逻辑拆词、前后缀、词根词缀、联想记忆方法，不照搬原文",
+    "chineseTextbook": "部编版七年级语文",
+    "designGoal": "先建立成就感，再逐步补齐基础"
+  },
+  "coverageCatalog": {
+    "math": [
+      {"volume": "七年级上册", "chapter": "第1章 有理数", "unitGoal": "建立正负数、数轴和有理数运算的基础感", "sections": [{"code": "1.1", "title": "正数和负数", "points": ["正数、负数、0的意义", "用正负号表示相反意义的量"]}, {"code": "1.2", "title": "数轴、相反数和绝对值", "points": ["数轴三要素", "点与数的对应", "相反数", "绝对值是到0的距离"]}, {"code": "1.3", "title": "有理数的大小", "points": ["正负数大小比较", "数轴上右大左小", "利用绝对值比较负数"]}, {"code": "1.4", "title": "有理数的加法和减法", "points": ["同号相加", "异号相加", "减法转化为加法", "加减混合运算"]}, {"code": "1.5", "title": "有理数的乘法和除法", "points": ["乘除符号法则", "倒数", "乘除混合运算"]}, {"code": "1.6", "title": "有理数的乘方", "points": ["乘方意义", "底数、指数、幂", "科学记数法入门", "有理数混合运算"]}, {"code": "1.7", "title": "近似数", "points": ["准确数与近似数", "精确度", "四舍五入"]}]},
+      {"volume": "七年级上册", "chapter": "第2章 整式加减", "unitGoal": "从数字运算过渡到符号表达", "sections": [{"code": "2.1", "title": "代数式", "points": ["用字母表示数", "列代数式", "代数式的值", "单项式、多项式、整式"]}, {"code": "2.2", "title": "整式加减", "points": ["同类项", "合并同类项", "去括号", "整式加减运算"]}]},
+      {"volume": "七年级上册", "chapter": "第3章 一次方程与方程组", "unitGoal": "用方程解决简单数量关系", "sections": [{"code": "3.1", "title": "一元一次方程及其解法", "points": ["方程与方程的解", "等式性质", "移项", "去括号", "去分母"]}, {"code": "3.2", "title": "一元一次方程的应用", "points": ["设未知数", "找等量关系", "行程、工程、配套、调配等简单应用"]}, {"code": "3.3", "title": "二元一次方程组及其解法", "points": ["二元一次方程", "方程组", "代入消元", "加减消元"]}, {"code": "3.4", "title": "二元一次方程组的应用", "points": ["两个未知量建模", "用方程组解决简单实际问题"]}]},
+      {"volume": "七年级上册", "chapter": "第4章 直线与角", "unitGoal": "建立基础几何语言和图形表达", "sections": [{"code": "4.1", "title": "几何图形", "points": ["点、线、面、体", "平面图形与立体图形", "展开与观察"]}, {"code": "4.2", "title": "线段、射线、直线", "points": ["线段、射线、直线的表示", "两点确定一条直线", "线段中点"]}, {"code": "4.3", "title": "线段的长短比较", "points": ["度量法", "叠合法", "两点之间线段最短"]}, {"code": "4.4", "title": "角", "points": ["角的表示", "角的度量", "度分秒换算", "角的分类"]}, {"code": "4.5", "title": "角的比较与补角余角", "points": ["角的大小比较", "角平分线", "余角", "补角"]}]},
+      {"volume": "七年级上册", "chapter": "第5章 数据的收集与整理", "unitGoal": "会收集、整理并读懂简单统计图表", "sections": [{"code": "5.1", "title": "数据的收集", "points": ["全面调查", "抽样调查", "样本与总体", "调查问卷"]}, {"code": "5.2", "title": "数据的整理", "points": ["分类整理", "频数", "频率", "统计表"]}, {"code": "5.3", "title": "用统计图描述数据", "points": ["条形统计图", "扇形统计图", "折线统计图", "从图表获取信息"]}]},
+      {"volume": "七年级下册", "chapter": "第6章 实数", "unitGoal": "认识平方根、立方根和实数范围", "sections": [{"code": "6.1", "title": "平方根、立方根", "points": ["平方根", "算术平方根", "立方根", "开方运算"]}, {"code": "6.2", "title": "实数", "points": ["无理数", "实数分类", "实数与数轴", "实数大小比较", "估算"]}]},
+      {"volume": "七年级下册", "chapter": "第7章 一元一次不等式与不等式组", "unitGoal": "用不等式描述范围并在数轴上表达", "sections": [{"code": "7.1", "title": "不等式及其基本性质", "points": ["不等式意义", "不等号", "不等式性质", "两边乘除负数变号"]}, {"code": "7.2", "title": "一元一次不等式", "points": ["解不等式", "解集", "数轴表示", "简单应用"]}, {"code": "7.3", "title": "一元一次不等式组", "points": ["公共解集", "同大取大", "同小取小", "大小小大中间找", "大大小小无解"]}]},
+      {"volume": "七年级下册", "chapter": "第8章 整式乘法与因式分解", "unitGoal": "掌握整式乘法公式并能反向分解", "sections": [{"code": "8.1", "title": "幂的运算", "points": ["同底数幂乘法", "幂的乘方", "积的乘方", "同底数幂除法"]}, {"code": "8.2", "title": "整式乘法", "points": ["单项式乘单项式", "单项式乘多项式", "多项式乘多项式"]}, {"code": "8.3", "title": "乘法公式", "points": ["平方差公式", "完全平方公式", "公式识别与套用"]}, {"code": "8.4", "title": "因式分解", "points": ["公因式", "提公因式法", "公式法", "分解到不能再分"]}]},
+      {"volume": "七年级下册", "chapter": "第9章 分式", "unitGoal": "把分母含字母的式子纳入可控运算", "sections": [{"code": "9.1", "title": "分式及其基本性质", "points": ["分式概念", "分式有意义的条件", "分式基本性质", "约分"]}, {"code": "9.2", "title": "分式运算", "points": ["通分", "分式加减", "分式乘除", "分式混合运算"]}, {"code": "9.3", "title": "分式方程", "points": ["去分母", "验根", "增根", "简单应用"]}]},
+      {"volume": "七年级下册", "chapter": "第10章 相交线、平行线与平移", "unitGoal": "认识平面几何中的位置关系和图形运动", "sections": [{"code": "10.1", "title": "相交线", "points": ["对顶角", "邻补角", "垂线", "点到直线的距离"]}, {"code": "10.2", "title": "平行线的判定", "points": ["同位角", "内错角", "同旁内角", "判定两直线平行"]}, {"code": "10.3", "title": "平行线的性质", "points": ["两直线平行同位角相等", "内错角相等", "同旁内角互补"]}, {"code": "10.4", "title": "平移", "points": ["平移方向", "平移距离", "对应点线角", "简单作图"]}]}
+    ],
+    "english": [
+      {"volume": "七年级上册", "module": "Starter Module 1 My teacher and my friends", "themes": ["问候", "介绍老师和朋友"], "wordRange": ["hello", "class", "teacher", "friend", "name", "meet", "goodbye"], "grammar": ["问候语", "This is...", "My name is..."], "skills": ["听懂课堂问候", "进行简单自我介绍"], "memoryMethods": ["场景记忆", "身份卡片"]},
+      {"volume": "七年级上册", "module": "Starter Module 2 My English lesson", "themes": ["英语课堂", "课堂指令"], "wordRange": ["book", "pen", "pencil", "English", "lesson", "open", "listen", "write", "read"], "grammar": ["祈使句", "What is this?", "How do you spell...? "], "skills": ["听懂课堂动作指令", "拼读简单单词"], "memoryMethods": ["动作绑定", "教室物品标签"]},
+      {"volume": "七年级上册", "module": "Starter Module 3 My English book", "themes": ["颜色", "物品", "数字"], "wordRange": ["red", "blue", "green", "black", "white", "desk", "bag", "map", "number", "one-ten"], "grammar": ["颜色描述", "It is...", "数字表达"], "skills": ["描述物品颜色", "识别数字和教室物品"], "memoryMethods": ["颜色画面", "背包分类"]},
+      {"volume": "七年级上册", "module": "Starter Module 4 My everyday life", "themes": ["日常生活", "日期天气运动"], "wordRange": ["day", "today", "Monday-Sunday", "weather", "spring", "summer", "autumn", "winter", "football", "swimming"], "grammar": ["What day is it?", "What is the weather like?", "I like..."], "skills": ["谈论星期、天气和喜欢的活动"], "memoryMethods": ["日历记忆", "天气图标"]},
+      {"volume": "七年级上册", "module": "Module 1 My classmates", "themes": ["同学", "个人信息"], "wordRange": ["student", "city", "China", "England", "American", "first", "last", "everyone", "age"], "grammar": ["be动词am/is/are", "人称代词", "形容词性物主代词", "自我介绍"], "skills": ["介绍姓名、年龄、城市和国籍"], "memoryMethods": ["身份档案", "对比记忆"]},
+      {"volume": "七年级上册", "module": "Module 2 My family", "themes": ["家庭成员", "职业"], "wordRange": ["family", "father", "mother", "parent", "brother", "sister", "doctor", "worker", "manager", "job"], "grammar": ["this/that/these/those", "名词所有格", "Who is this?"], "skills": ["介绍家庭成员和职业"], "memoryMethods": ["家庭树", "职业场景"]},
+      {"volume": "七年级上册", "module": "Module 3 My school", "themes": ["校园地点", "方位"], "wordRange": ["school", "classroom", "library", "playground", "science", "lab", "behind", "between", "near", "building"], "grammar": ["there be句型", "方位介词", "How many..."], "skills": ["描述校园布局"], "memoryMethods": ["地图路线", "位置对比"]},
+      {"volume": "七年级上册", "module": "Module 4 Healthy food", "themes": ["食物", "健康"], "wordRange": ["food", "drink", "healthy", "vegetable", "fruit", "meat", "rice", "bread", "milk", "juice"], "grammar": ["可数名词与不可数名词", "some/any", "have got"], "skills": ["谈论饮食和健康选择"], "memoryMethods": ["背包分类", "属性标签"]},
+      {"volume": "七年级上册", "module": "Module 5 My school day", "themes": ["课程", "作息"], "wordRange": ["lesson", "subject", "maths", "Chinese", "history", "geography", "morning", "afternoon", "homework", "break"], "grammar": ["一般现在时", "时间表达", "at/on/in"], "skills": ["描述一天的课程表"], "memoryMethods": ["时间轴", "课程卡片"]},
+      {"volume": "七年级上册", "module": "Module 6 A trip to the zoo", "themes": ["动物", "习性"], "wordRange": ["zoo", "animal", "panda", "monkey", "tiger", "elephant", "giraffe", "bamboo", "Africa", "Asia"], "grammar": ["一般现在时第三人称单数", "Does it...?", "行为动词描述"], "skills": ["描述动物和生活地"], "memoryMethods": ["动物图鉴", "栖息地联想"]},
+      {"volume": "七年级上册", "module": "Module 7 Computers", "themes": ["电脑", "操作步骤"], "wordRange": ["computer", "keyboard", "mouse", "screen", "document", "save", "print", "click", "internet", "email"], "grammar": ["频度副词", "操作顺序连接词", "How do I...? "], "skills": ["说明电脑操作流程"], "memoryMethods": ["按钮动作", "流程记忆"]},
+      {"volume": "七年级上册", "module": "Module 8 Choosing presents", "themes": ["生日", "礼物", "频率"], "wordRange": ["birthday", "present", "card", "party", "always", "usually", "often", "sometimes", "never", "special"], "grammar": ["频度副词位置", "一般现在时", "Would you like...? "], "skills": ["谈论生日习惯和礼物选择"], "memoryMethods": ["礼物清单", "频率条"]},
+      {"volume": "七年级上册", "module": "Module 9 People and places", "themes": ["此刻正在做的事", "地点"], "wordRange": ["postcard", "call", "lie", "sun", "line", "take photos", "wait", "walk", "trip", "place"], "grammar": ["现在进行时", "be doing", "地点与动作描写"], "skills": ["描述人们正在做什么"], "memoryMethods": ["实时画面", "动作截图"]},
+      {"volume": "七年级上册", "module": "Module 10 Spring Festival", "themes": ["春节", "节日活动"], "wordRange": ["festival", "Spring Festival", "celebrate", "lantern", "dragon", "clean", "cook", "meal", "sweep", "luck"], "grammar": ["现在进行时复习", "节日表达", "一般现在时与现在进行时对比"], "skills": ["描述节日准备和习俗"], "memoryMethods": ["节日流程", "家庭场景"]},
+      {"volume": "七年级下册", "module": "Module 1 Lost and found", "themes": ["失物招领", "物品归属"], "wordRange": ["crayon", "eraser", "glove", "wallet", "watch", "whose", "mine", "yours", "hers", "careful"], "grammar": ["名词性物主代词", "whose提问", "物品归属表达"], "skills": ["询问和说明物品是谁的"], "memoryMethods": ["失物箱", "归属标签"]},
+      {"volume": "七年级下册", "module": "Module 2 What can you do?", "themes": ["能力", "社团"], "wordRange": ["play", "tennis", "piano", "ride", "club", "term", "board", "teach", "monitor", "promise"], "grammar": ["can/can't", "情态动词", "选择社团表达"], "skills": ["说明自己会做什么"], "memoryMethods": ["技能栏", "社团招募"]},
+      {"volume": "七年级下册", "module": "Module 3 Making plans", "themes": ["计划", "周末活动"], "wordRange": ["plan", "picnic", "housework", "else", "nobody", "at", "fantastic", "forward", "fan", "shirt"], "grammar": ["be going to", "未来计划", "时间状语"], "skills": ["表达近期计划"], "memoryMethods": ["任务日程", "地图标记"]},
+      {"volume": "七年级下册", "module": "Module 4 Life in the future", "themes": ["未来生活", "预测"], "wordRange": ["chalk", "ruler", "carry", "change", "future", "life", "need", "will", "maybe", "question"], "grammar": ["will一般将来时", "There will be...", "未来预测"], "skills": ["描述未来学校和生活"], "memoryMethods": ["未来科技设定", "预测卡"]},
+      {"volume": "七年级下册", "module": "Module 5 Shopping", "themes": ["购物", "价格"], "wordRange": ["market", "supermarket", "biscuit", "lemon", "strawberry", "size", "take", "may", "price", "compare"], "grammar": ["特殊疑问句", "How much/many", "购物交际"], "skills": ["询问价格、尺码和数量"], "memoryMethods": ["商店界面", "价格标签"]},
+      {"volume": "七年级下册", "module": "Module 6 Around town", "themes": ["城市路线", "问路"], "wordRange": ["bank", "museum", "along", "across", "cross", "opposite", "tourist", "square", "bridge", "underground"], "grammar": ["方位介词", "祈使句问路", "How can I get to...? "], "skills": ["读懂路线并指路"], "memoryMethods": ["城市地图", "路线箭头"]},
+      {"volume": "七年级下册", "module": "Module 7 My past life", "themes": ["过去的生活", "出生地"], "wordRange": ["born", "strict", "friendly", "primary", "town", "village", "nice", "good", "difficult", "bathroom"], "grammar": ["be动词一般过去时was/were", "过去时间表达"], "skills": ["描述过去的人和地点"], "memoryMethods": ["旧档案", "时间回放"]},
+      {"volume": "七年级下册", "module": "Module 8 Story time", "themes": ["故事", "童话"], "wordRange": ["hair", "gold", "forest", "decide", "notice", "knock", "push", "enter", "bowl", "finish"], "grammar": ["规则动词一般过去时", "故事顺序连接词"], "skills": ["按时间顺序讲故事"], "memoryMethods": ["剧情节点", "动作链"]},
+      {"volume": "七年级下册", "module": "Module 9 Life history", "themes": ["人物生平", "历史时间"], "wordRange": ["March", "April", "June", "July", "August", "September", "writer", "real", "newspaper", "date"], "grammar": ["一般过去时不规则动词", "月份和年份", "when提问"], "skills": ["介绍人物经历"], "memoryMethods": ["时间线", "人物档案"]},
+      {"volume": "七年级下册", "module": "Module 10 A holiday journey", "themes": ["假期旅行", "经历"], "wordRange": ["Pacific", "so", "guess", "excited", "arrive", "relax", "world-famous", "French", "sell", "top"], "grammar": ["一般过去时复习", "旅行叙述", "first/then/finally"], "skills": ["叙述旅行经历"], "memoryMethods": ["旅行地图", "相册顺序"]},
+      {"volume": "七年级下册", "module": "Module 11 Body language", "themes": ["肢体语言", "文化差异"], "wordRange": ["bow", "kiss", "shake", "smile", "visitor", "Russia", "India", "together", "touch", "polite"], "grammar": ["祈使句", "should/shouldn't入门", "文化礼仪表达"], "skills": ["说明不同国家的问候方式"], "memoryMethods": ["动作表情", "国家标签"]},
+      {"volume": "七年级下册", "module": "Module 12 Western music", "themes": ["音乐", "作曲家"], "wordRange": ["lively", "modern", "noisy", "pop", "rock", "sound", "violin", "opera", "drum", "believe"], "grammar": ["感叹句", "选择疑问句", "反意疑问句入门"], "skills": ["表达音乐喜好和评价"], "memoryMethods": ["音乐风格卡", "声音联想"]}
+    ],
+    "chinese": [
+      {"volume": "七年级上册", "unit": "第一单元 四季美景", "texts": [{"title": "春", "genre": "写景散文", "type": "精读"}, {"title": "济南的冬天", "genre": "写景散文", "type": "精读"}, {"title": "雨的四季", "genre": "写景散文", "type": "自读"}, {"title": "古代诗歌四首", "genre": "古诗词", "type": "精读"}], "writing": "热爱生活，热爱写作", "integrated": "", "classicReading": "", "extraPoems": [], "abilities": ["朗读节奏", "景物顺序", "画面感", "诗歌意象"]},
+      {"volume": "七年级上册", "unit": "第二单元 亲情与成长", "texts": [{"title": "秋天的怀念", "genre": "叙事散文", "type": "精读"}, {"title": "散步", "genre": "叙事散文", "type": "精读"}, {"title": "散文诗二首", "genre": "散文诗", "type": "精读"}, {"title": "世说新语二则", "genre": "文言短文", "type": "精读"}], "writing": "学会记事", "integrated": "有朋自远方来", "classicReading": "", "extraPoems": [], "abilities": ["人物情绪", "事件六要素", "文言词句", "亲情表达"]},
+      {"volume": "七年级上册", "unit": "第三单元 学习与童年", "texts": [{"title": "从百草园到三味书屋", "genre": "回忆性散文", "type": "精读"}, {"title": "再塑生命的人", "genre": "传记", "type": "精读"}, {"title": "论语十二章", "genre": "文言语录", "type": "精读"}], "writing": "写人要抓住特点", "integrated": "少年正是读书时", "classicReading": "朝花夕拾：消除与经典的隔膜", "extraPoems": ["峨眉山月歌", "江南逢李龟年", "行军九日思长安故园", "夜上受降城闻笛"], "abilities": ["默读浏览", "人物特点", "学习方法", "经典阅读"]},
+      {"volume": "七年级上册", "unit": "第四单元 人生之舟", "texts": [{"title": "纪念白求恩", "genre": "议论文", "type": "精读"}, {"title": "植树的牧羊人", "genre": "小说", "type": "精读"}, {"title": "走一步，再走一步", "genre": "叙事散文", "type": "自读"}, {"title": "诫子书", "genre": "文言文", "type": "精读"}], "writing": "思路要清晰", "integrated": "", "classicReading": "", "extraPoems": [], "abilities": ["段落思路", "人物精神", "议论与叙事", "文言劝诫"]},
+      {"volume": "七年级上册", "unit": "第五单元 生命观察", "texts": [{"title": "猫", "genre": "散文", "type": "精读"}, {"title": "动物笑谈", "genre": "科学小品", "type": "自读"}, {"title": "狼", "genre": "文言小说", "type": "精读"}], "writing": "如何突出中心", "integrated": "", "classicReading": "", "extraPoems": [], "abilities": ["细节观察", "态度变化", "文言故事", "中心突出"]},
+      {"volume": "七年级上册", "unit": "第六单元 想象之翼", "texts": [{"title": "皇帝的新装", "genre": "童话", "type": "精读"}, {"title": "天上的街市", "genre": "现代诗", "type": "精读"}, {"title": "女娲造人", "genre": "神话", "type": "自读"}, {"title": "寓言四则", "genre": "寓言", "type": "精读"}], "writing": "发挥联想和想象", "integrated": "文学部落", "classicReading": "西游记：精读和跳读", "extraPoems": ["秋词", "夜雨寄北", "十一月四日风雨大作", "潼关"], "abilities": ["想象表达", "寓意理解", "诗歌联想", "名著精读跳读"]},
+      {"volume": "七年级下册", "unit": "第一单元 群星闪耀", "texts": [{"title": "邓稼先", "genre": "人物传记", "type": "精读"}, {"title": "说和做", "genre": "人物散文", "type": "精读"}, {"title": "回忆鲁迅先生", "genre": "回忆性散文", "type": "自读"}, {"title": "孙权劝学", "genre": "文言文", "type": "精读"}], "writing": "写出人物的精神", "integrated": "", "classicReading": "", "extraPoems": [], "abilities": ["人物精神", "细节描写", "旁批阅读", "文言劝学"]},
+      {"volume": "七年级下册", "unit": "第二单元 家国情怀", "texts": [{"title": "黄河颂", "genre": "现代诗", "type": "精读"}, {"title": "老山界", "genre": "叙事散文", "type": "精读"}, {"title": "土地的誓言", "genre": "抒情散文", "type": "自读"}, {"title": "木兰诗", "genre": "乐府诗", "type": "精读"}], "writing": "学习抒情", "integrated": "天下国家", "classicReading": "", "extraPoems": [], "abilities": ["朗诵情感", "叙事线索", "抒情方式", "乐府诗理解"]},
+      {"volume": "七年级下册", "unit": "第三单元 小人物与凡人光", "texts": [{"title": "阿长与山海经", "genre": "回忆性散文", "type": "精读"}, {"title": "老王", "genre": "散文", "type": "精读"}, {"title": "台阶", "genre": "小说", "type": "自读"}, {"title": "卖油翁", "genre": "文言文", "type": "精读"}], "writing": "抓住细节", "integrated": "孝亲敬老，从我做起", "classicReading": "骆驼祥子：圈点与批注", "extraPoems": ["竹里馆", "春夜洛城闻笛", "逢入京使", "晚春"], "abilities": ["细节阅读", "人物命运", "圈点批注", "文言故事"]},
+      {"volume": "七年级下册", "unit": "第四单元 修身正己", "texts": [{"title": "叶圣陶先生二三事", "genre": "记人散文", "type": "精读"}, {"title": "驿路梨花", "genre": "小说", "type": "精读"}, {"title": "最苦与最乐", "genre": "议论文", "type": "自读"}, {"title": "短文两篇：陋室铭、爱莲说", "genre": "文言文", "type": "精读"}], "writing": "怎样选材", "integrated": "", "classicReading": "", "extraPoems": [], "abilities": ["略读", "选材", "议论文观点", "托物言志"]},
+      {"volume": "七年级下册", "unit": "第五单元 哲思与自然", "texts": [{"title": "紫藤萝瀑布", "genre": "散文", "type": "精读"}, {"title": "一棵小桃树", "genre": "散文", "type": "自读"}, {"title": "外国诗二首", "genre": "诗歌", "type": "自读"}, {"title": "古代诗歌五首", "genre": "古诗词", "type": "精读"}], "writing": "文从字顺", "integrated": "", "classicReading": "", "extraPoems": [], "abilities": ["托物抒情", "象征", "语言连贯", "古诗情景"]},
+      {"volume": "七年级下册", "unit": "第六单元 探险与科学", "texts": [{"title": "伟大的悲剧", "genre": "传记文学", "type": "精读"}, {"title": "太空一日", "genre": "回忆录", "type": "精读"}, {"title": "带上她的眼睛", "genre": "科幻小说", "type": "自读"}, {"title": "河中石兽", "genre": "文言文", "type": "精读"}], "writing": "语言简明", "integrated": "我的语文生活", "classicReading": "海底两万里：快速阅读", "extraPoems": ["泊秦淮", "贾生", "过松源晨炊漆公店", "约客"], "abilities": ["浏览与摘录", "科学精神", "科幻想象", "快速阅读"]}
+    ]
+  },
+  "days": {
+    "1": {
+      "title": "新手引导：能量条上线",
+      "dailyCatalog": {"mathChapter": "七年级上册 第1章 有理数", "mathTopic": "正数和负数", "mathPoint": "用正负号表示增加和减少", "englishModule": "Starter Module 1 My teacher and my friends", "englishWords": ["hello", "class", "teacher", "friend", "name", "meet", "yes", "no"], "englishMethod": "场景记忆：把单词放进登录、组队和对话界面", "chineseUnit": "七年级上册 第一单元", "chineseText": "春", "chineseTaskType": "现代文阅读：地图与镜头设计", "review": "轻复习小学常见 yes 和 no", "stage": "第1-3天：新手引导，极简单，建立完成感"},
+      "moodCheck": {"question": "今天能量条大概是多少？", "options": ["1格：低能量，也可以通关", "2格：正常通关", "3格：加成挑战"], "rule": "1格时每题只读关键词，语文可口答；2格正常完成；3格完成后只加一个小奖励，不额外加量。"},
+      "mathVideo": {"platform": "B站", "searchKeyword": "数学微课帮 七年级 正数和负数", "watchTime": "6-8分钟", "watchGoal": "只记住正号表示增加，负号表示减少"},
+      "warmup": "今天只开新手教程，不追求快，完成就是通关。",
+      "englishVocab": [
+        {"word": "hello", "pos": "interj.", "meaning": "你好", "memoryLogic": "像进入游戏时的第一句问候，看到人先 hello。", "gameScene": "登录后 NPC 对你说 hello。", "example": "Hello, my friend."},
+        {"word": "class", "pos": "n.", "meaning": "班级；同学们", "memoryLogic": "class 可以想成一个小队，老师对全队说话。", "gameScene": "老师 NPC 说 Good morning, class.", "example": "Hello, class."},
+        {"word": "teacher", "pos": "n.", "meaning": "老师", "memoryLogic": "teach 是教，-er 常表示做这件事的人，teacher 就是教的人。", "gameScene": "新手村教学 NPC 是 teacher。", "example": "This is my teacher."},
+        {"word": "friend", "pos": "n.", "meaning": "朋友", "memoryLogic": "把 friend 和组队好友绑定记忆。", "gameScene": "添加队友成功：new friend。", "example": "She is my friend."},
+        {"word": "name", "pos": "n.", "meaning": "名字", "memoryLogic": "角色创建界面一定要填 name。", "gameScene": "角色档案第一栏是 name。", "example": "My name is Ling."},
+        {"word": "meet", "pos": "v.", "meaning": "遇见；见到", "memoryLogic": "meet 像地图上碰到新角色。", "gameScene": "任务提示：meet a friend。", "example": "Nice to meet you."},
+        {"word": "yes", "pos": "adv.", "meaning": "是；同意", "memoryLogic": "复习词：弹窗确认时点 yes。", "gameScene": "是否领取奖励？yes。", "example": "Yes, I can."},
+        {"word": "no", "pos": "adv.", "meaning": "不；没有", "memoryLogic": "复习词：拒绝或否定时用 no。", "gameScene": "没有体力了：no energy。", "example": "No, thanks."}
+      ],
+      "math": [
+        {"id": "m1_1", "point": "变化量", "q": "体力从10变成13，变化记作？", "options": ["A. +3", "B. -3", "C. 0"], "ans": 0, "hint": "变多了。", "explain": "13比10多3，所以变化量是 +3。", "encouragement": "很好，已经不是只看符号了。"},
+        {"id": "m1_2", "point": "变化量", "q": "金币从8变成5，变化记作？", "options": ["A. +3", "B. -3", "C. +5"], "ans": 1, "hint": "变少了。", "explain": "5比8少3，所以变化量是 -3。", "encouragement": "减少方向判断稳住了。"},
+        {"id": "m1_3", "point": "正负数表示", "q": "塔楼地上4层，可记作？", "options": ["A. +4", "B. -4", "C. 0"], "ans": 0, "hint": "地上是正方向。", "explain": "以地面为0，地上4层可记作 +4。", "encouragement": "场景坐标感出来了。"},
+        {"id": "m1_4", "point": "正负数表示", "q": "地下副本2层，可记作？", "options": ["A. +2", "B. -2", "C. 0"], "ans": 1, "hint": "地下是负方向。", "explain": "以地面为0，地下2层可记作 -2。", "encouragement": "上下方向也能转成正负数。"},
+        {"id": "m1_5", "point": "0的意义", "q": "装备耐久从6到6，变化是？", "options": ["A. +6", "B. -6", "C. 0"], "ans": 2, "hint": "没有变。", "explain": "前后都是6，变化量是0。", "encouragement": "0不是空白，是没有变化。"},
+        {"id": "m1_6", "point": "净变化", "q": "先获得5经验，又消耗2经验，净变化？", "options": ["A. +3", "B. -3", "C. +7"], "ans": 0, "hint": "+5 再 -2。", "explain": "+5 和 -2 合起来，净增加3，记作 +3。", "encouragement": "开始有一点计算了，很好。"},
+        {"id": "m1_7", "point": "净变化", "q": "先掉4血，又回血1点，净变化？", "options": ["A. -5", "B. -3", "C. +3"], "ans": 1, "hint": "-4 再 +1。", "explain": "掉4再回1，整体还是少3，记作 -3。", "encouragement": "这题要想一步，你接住了。"},
+        {"id": "m1_8", "point": "多次变化", "q": "声望变化：+2，-6，+3，结果？", "options": ["A. -1", "B. +1", "C. -11"], "ans": 0, "hint": "先把增加合起来。", "explain": "+2 和 +3 共 +5，再遇到 -6，净变化是 -1。", "encouragement": "三段变化也能拆开做。"},
+        {"id": "m1_9", "point": "反推变化", "q": "积分从 -2 到 +1，变化量是？", "options": ["A. +3", "B. -3", "C. +1"], "ans": 0, "hint": "从-2走到+1。", "explain": "-2 到0走2格，0到+1走1格，共增加3。", "encouragement": "这是轻挑战，做得很漂亮。"},
+        {"id": "m1_10", "point": "反推变化", "q": "总变化是 -5，已知先 -2，后来是？", "options": ["A. -3", "B. +3", "C. -7"], "ans": 0, "hint": "-2 加上多少变 -5？", "explain": "-2 后还要再减少3，才能总共 -5，所以后来是 -3。", "encouragement": "Day 1 数学升级版通关。"}
+      ],
+      "english": [
+        {"id": "e1_1", "point": "【基础问候】", "q": "单词 'hello' 常出现在什么场景？", "options": ["A. 打招呼", "B. 结算伤害", "C. 打开地图"], "ans": 0, "hint": "进入对话的第一句。", "explain": "hello 是问候词，先把它绑定到“开始对话”这个场景。", "encouragement": "不是死背，是把词放进画面里。"},
+        {"id": "e1_2", "point": "【词根法】", "q": "'teacher' 可看成 'teach' + '-er'，'-er' 常表示？", "options": ["A. 做这件事的人", "B. 完全相反", "C. 很多很多"], "ans": 0, "hint": "teach 是教。", "explain": "teach 是教，teacher 就是教的人。先抓住核心动作，再看后缀。", "encouragement": "这个拆法很适合以后记 worker、player。"},
+        {"id": "e1_3", "point": "【逻辑词汇】", "q": "'friend' 最适合放进哪个记忆场景？", "options": ["A. 组队好友", "B. 红色药水", "C. 数字编号"], "ans": 0, "hint": "friend 是和你一起行动的人。", "explain": "friend 不是孤零零背中文，和“好友、队友、一起行动”绑定更稳。", "encouragement": "词义和场景连上了。"},
+        {"id": "e1_4", "point": "【场景记忆】", "q": "角色创建页里的 'name' 指什么？", "options": ["A. 名字", "B. 体力", "C. 地图"], "ans": 0, "hint": "创建角色第一栏常填它。", "explain": "name 直接放进角色档案栏记：name = 名字。", "encouragement": "用熟悉界面记词，会轻很多。"},
+        {"id": "e1_5", "point": "【确认词】", "q": "弹窗问“领取奖励吗？”点 'yes' 表示？", "options": ["A. 同意", "B. 不要", "C. 朋友"], "ans": 0, "hint": "yes 是肯定。", "explain": "yes 表示是、同意、确认。把它和确认按钮绑定。", "encouragement": "基础词也可以有画面。"},
+        {"id": "e1_6", "point": "【否定词】", "q": "'no' 更接近哪个意思？", "options": ["A. 不/没有", "B. 老师", "C. 遇见"], "ans": 0, "hint": "no 是最短的否定。", "explain": "no 表示不、没有，先作为否定按钮记住。", "encouragement": "这类小词很常用，先抓功能就够了。"},
+        {"id": "e1_7", "point": "【短语拆分】", "q": "'meet a friend' 可以拆成？", "options": ["A. 遇见 + 一个朋友", "B. 打开 + 一本书", "C. 蓝色 + 地图"], "ans": 0, "hint": "meet 是遇见。", "explain": "meet a friend = meet + a friend，先拆成小块再合起来。", "encouragement": "你已经在用短语拆分了。"},
+        {"id": "e1_8", "point": "【课堂场景】", "q": "'Hello, class.' 里 'class' 更像老师在叫谁？", "options": ["A. 同学们", "B. 一支笔", "C. 一张地图"], "ans": 0, "hint": "老师对全班说话。", "explain": "class 可表示班级或同学们，放进课堂场景最容易懂。", "encouragement": "这就是场景记忆。"},
+        {"id": "e1_9", "point": "【句型感知】", "q": "'My name is Ling.' 这句在做什么？", "options": ["A. 介绍名字", "B. 描述颜色", "C. 询问天气"], "ans": 0, "hint": "name 是名字。", "explain": "My name is... 是自我介绍的固定句块，不用逐字硬翻。", "encouragement": "句块比散词更好用。"},
+        {"id": "e1_10", "point": "【介绍句型】", "q": "'This is my teacher.' 这句在介绍谁？", "options": ["A. 我的老师", "B. 我的地图", "C. 我的药水"], "ans": 0, "hint": "teacher 是教的人。", "explain": "This is... 用来介绍人或物，teacher 用 teach + er 来记。", "encouragement": "Day 1 英语委托完成。"}
+      ],
+      "chinese": {"title": "镜头任务：春天地图第一眼", "time": "10-15分钟", "chineseCatalog": {"textbook": "部编版七年级语文", "unit": "七年级上册 第一单元", "text": "春", "genre": "写景散文", "learningPoint": "从一个自然段里找画面感", "taskType": "现代文阅读：地图与镜头设计", "stage": "前15天轻量日常委托", "examAbility": "提取景物和画面信息"}, "mission": "读《春》的开头第1自然段。想象这是游戏开场镜头：镜头先看见什么？空气里是什么感觉？", "answerFormat": "用20-40字写或说：我看到____，感觉____。", "sampleAnswer": "我看到春天像地图慢慢亮起来，感觉空气变轻了，好像可以出门探索。", "parentCheck": "只确认她愿意说出一个画面，不评价文采。", "reward": "获得道具：开场镜头卡"},
+      "review": "今天只需要记住：正数像增加，负数像减少；hello 是打招呼。",
+      "tracking": {"completion": "未开始/完成部分/完成全部", "mathWrongTags": [], "englishWrongTags": [], "chineseResponseLength": "", "nextDayAdjustment": "如果正负号混淆，Day 2 先用体力条再进入数轴。"},
+      "reward": "完成后领取：新手徽章 1 枚",
+      "parentGuide": {"doSay": "今天完成就很好，先让大脑知道学习可以轻松开始。", "dontSay": "不要追问分数，不加题，不翻旧账。", "observe": "观察她在哪一题开始皱眉，记录即可，不当场纠正太久。"}
+    },
+    "2": {
+      "title": "地图坐标：站到数轴上",
+      "dailyCatalog": {"mathChapter": "七年级上册 第1章 有理数", "mathTopic": "数轴", "mathPoint": "用数轴表示正数、负数和0", "englishModule": "Starter Module 2 My English lesson", "englishWords": ["book", "pen", "English", "lesson", "open", "listen", "teacher", "friend"], "englishMethod": "动作绑定：open 对应打开，listen 对应听", "chineseUnit": "七年级上册 第一单元", "chineseText": "古代诗歌四首：观沧海", "chineseTaskType": "古诗词：设定破译与角色语音", "review": "复习 Day 1 的 teacher 和 friend", "stage": "第1-3天：新手引导，极简单，建立完成感"},
+      "moodCheck": {"question": "今天能量条大概是多少？", "options": ["1格：低能量，也可以通关", "2格：正常通关", "3格：加成挑战"], "rule": "1格时只看数轴左右方向，语文可口答；2格正常完成；3格可把一个英语单词贴到真实物品上。"},
+      "mathVideo": {"platform": "B站", "searchKeyword": "数学微课帮 七年级 数轴", "watchTime": "6-8分钟", "watchGoal": "只记住0在中间，右边是正，左边是负"},
+      "warmup": "今天把数学变成地图坐标：0 是出生点，右边前进，左边返回。",
+      "englishVocab": [
+        {"word": "book", "pos": "n.", "meaning": "书", "memoryLogic": "book 像背包里的学习道具。", "gameScene": "背包获得 English book。", "example": "Open your book."},
+        {"word": "pen", "pos": "n.", "meaning": "钢笔；笔", "memoryLogic": "pen 是写字工具，和 pencil 都是文具队友。", "gameScene": "任务道具：a blue pen。", "example": "This is my pen."},
+        {"word": "English", "pos": "n./adj.", "meaning": "英语；英语的", "memoryLogic": "English 首字母常大写，像一个正式地图名。", "gameScene": "进入 English lesson 副本。", "example": "I like English."},
+        {"word": "lesson", "pos": "n.", "meaning": "课；一节课", "memoryLogic": "lesson 可以想成每日训练关卡。", "gameScene": "今日副本：English lesson。", "example": "This is a lesson."},
+        {"word": "open", "pos": "v.", "meaning": "打开", "memoryLogic": "open 和打开宝箱的动作绑定。", "gameScene": "Open the chest.", "example": "Open your book."},
+        {"word": "listen", "pos": "v.", "meaning": "听", "memoryLogic": "listen 是听指令，像听 NPC 发布任务。", "gameScene": "Listen to the teacher.", "example": "Listen to me."},
+        {"word": "teacher", "pos": "n.", "meaning": "老师", "memoryLogic": "复习词：teach 是教，teacher 是教的人。", "gameScene": "teacher 给出课堂任务。", "example": "My teacher is nice."},
+        {"word": "friend", "pos": "n.", "meaning": "朋友", "memoryLogic": "复习词：组队好友就是 friend。", "gameScene": "Meet my friend.", "example": "He is my friend."}
+      ],
+      "math": [
+        {"id": "m2_1", "point": "数轴方向", "q": "数轴上，0右边的数通常是？", "options": ["A. 正数", "B. 负数", "C. 只有0"], "ans": 0, "hint": "右边是正方向。", "explain": "数轴上0的右边是正数。", "encouragement": "方向感先稳住。"},
+        {"id": "m2_2", "point": "坐标移动", "q": "从0向右走4格，到达？", "options": ["A. +4", "B. -4", "C. 0"], "ans": 0, "hint": "右走是正。", "explain": "从0向右4格，就是 +4。", "encouragement": "移动和坐标连上了。"},
+        {"id": "m2_3", "point": "坐标移动", "q": "从0向左走5格，到达？", "options": ["A. +5", "B. -5", "C. 5"], "ans": 1, "hint": "左走是负。", "explain": "从0向左5格，就是 -5。", "encouragement": "负方向也稳。"},
+        {"id": "m2_4", "point": "相反位置", "q": "和 +2 关于0对称的位置是？", "options": ["A. -2", "B. +4", "C. 0"], "ans": 0, "hint": "离0同样远，方向相反。", "explain": "+2 在右2格，对称点在左2格，是 -2。", "encouragement": "镜像位置判断不错。"},
+        {"id": "m2_5", "point": "数轴比较", "q": "谁在数轴上更靠右？", "options": ["A. -1", "B. +3", "C. 0"], "ans": 1, "hint": "越靠右越大。", "explain": "+3 比0和-1都靠右。", "encouragement": "比较大小可以直接看位置。"},
+        {"id": "m2_6", "point": "坐标移动", "q": "从 -2 向右走5格，到达？", "options": ["A. +3", "B. -7", "C. +5"], "ans": 0, "hint": "-2到0先走2格。", "explain": "-2 向右5格：到0用2格，还剩3格，到 +3。", "encouragement": "这题已经有跨过0的移动了。"},
+        {"id": "m2_7", "point": "坐标移动", "q": "从 +4 向左走6格，到达？", "options": ["A. -2", "B. +2", "C. -6"], "ans": 0, "hint": "+4到0先走4格。", "explain": "+4 向左6格：到0用4格，还剩2格，到 -2。", "encouragement": "跨0移动做得很稳。"},
+        {"id": "m2_8", "point": "数轴距离", "q": "宝箱在 -3，怪物在 +2，相距几格？", "options": ["A. 1格", "B. 5格", "C. 3格"], "ans": 1, "hint": "中间要经过0。", "explain": "-3到0有3格，0到+2有2格，一共5格。", "encouragement": "距离题也能拆成两段。"},
+        {"id": "m2_9", "point": "反推起点", "q": "向右走3格后到 +1，起点是？", "options": ["A. -2", "B. +4", "C. 0"], "ans": 0, "hint": "反过来向左走3格。", "explain": "到 +1 前向右走了3格，所以从 +1 向左退3格，起点是 -2。", "encouragement": "轻挑战反推成功。"},
+        {"id": "m2_10", "point": "数轴排序", "q": "从左到右排列：-4、+1、0，正确是？", "options": ["A. -4，0，+1", "B. 0，-4，+1", "C. +1，0，-4"], "ans": 0, "hint": "负数在0左边。", "explain": "数轴从左到右越来越大，所以是 -4，0，+1。", "encouragement": "Day 2 数轴升级版完成。"}
+      ],
+      "english": [
+        {"id": "e2_1", "point": "【基础词汇】", "q": "'book' 放进背包物品栏，最像什么？", "options": ["A. 书", "B. 老师", "C. 蓝色"], "ans": 0, "hint": "课本也是 book。", "explain": "book 是书，先和现实课本、游戏道具书绑定。", "encouragement": "物品词用标签记，很稳。"},
+        {"id": "e2_2", "point": "【基础词汇】", "q": "'pen' 是哪种学习道具？", "options": ["A. 笔", "B. 地图", "C. 朋友"], "ans": 0, "hint": "写字用的。", "explain": "pen 是笔。可以和 pencil 放在同一个“文具栏”里记。", "encouragement": "背包分类法上线。"},
+        {"id": "e2_3", "point": "【动作绑定】", "q": "'open' 最适合绑定哪个动作？", "options": ["A. 打开", "B. 听", "C. 写"], "ans": 0, "hint": "open the book。", "explain": "open 是打开。把它和打开书、打开门、打开宝箱放一起。", "encouragement": "动作词用动作记。"},
+        {"id": "e2_4", "point": "【动作绑定】", "q": "'listen' 要用哪个感官来完成？", "options": ["A. 耳朵听", "B. 手写", "C. 眼睛画"], "ans": 0, "hint": "listen to me。", "explain": "listen 是听，常和 to 连用：listen to the teacher。", "encouragement": "这比单背中文更容易记。"},
+        {"id": "e2_5", "point": "【词块法】", "q": "'English lesson' 不拆死背，整体表示？", "options": ["A. 英语课", "B. 红色书包", "C. 两支笔"], "ans": 0, "hint": "English 是英语，lesson 是课。", "explain": "English lesson 是一个词块，直接记成“英语课”这个场景。", "encouragement": "词块记忆很适合初一。"},
+        {"id": "e2_6", "point": "【课堂场景】", "q": "'lesson' 更像每日学习里的什么？", "options": ["A. 一节课", "B. 一个城市", "C. 一只动物"], "ans": 0, "hint": "每天上的课。", "explain": "lesson 是课、一节课。可以想成每日训练关卡。", "encouragement": "场景很清楚。"},
+        {"id": "e2_7", "point": "【词根复习】", "q": "'teacher' 里 'teach' 提醒我们这个人会做什么？", "options": ["A. 教", "B. 跑", "C. 买"], "ans": 0, "hint": "teach 是教。", "explain": "teacher = teach + er，核心先抓 teach。", "encouragement": "拆词法复习成功。"},
+        {"id": "e2_8", "point": "【短语拆分】", "q": "'Listen to the teacher.' 先抓哪个动作？", "options": ["A. listen 听", "B. teacher 老师", "C. pen 笔"], "ans": 0, "hint": "句子开头是动作。", "explain": "这句先抓 listen，再看对象 the teacher：听老师说。", "encouragement": "先抓动词，句子会变简单。"},
+        {"id": "e2_9", "point": "【词缀预告】", "q": "'reopen' 可拆成 're-' + 'open'，'re-' 常表示？", "options": ["A. 再一次/重新", "B. 完全不", "C. 颜色变蓝"], "ans": 0, "hint": "open 是打开。", "explain": "re- 常表示再次、重新。reopen 就是再次打开。", "encouragement": "你已经开始用前缀推词义了。"},
+        {"id": "e2_10", "point": "【句型感知】", "q": "'Open your book.' 这句话是在发出什么？", "options": ["A. 打开书的指令", "B. 介绍朋友", "C. 描述颜色"], "ans": 0, "hint": "open 是打开。", "explain": "Open your book. 是课堂指令，动词开头，不需要主语也能表达命令。", "encouragement": "Day 2 英语委托完成。"}
+      ],
+      "chinese": {"title": "设定破译：站上海边的角色", "time": "10-15分钟", "chineseCatalog": {"textbook": "部编版七年级语文", "unit": "七年级上册 第一单元", "text": "观沧海", "genre": "古诗词", "learningPoint": "把一句古诗转成能理解的画面", "taskType": "古诗词：设定破译与角色语音", "stage": "前15天轻量日常委托", "examAbility": "理解诗句大意"}, "mission": "只看一句：东临碣石，以观沧海。先想象角色站在高处看海，再把它改成一句角色语音。", "answerFormat": "用20-40字写或说：我站在____，看见____。", "sampleAnswer": "我站在海边高高的石山上，看见一大片海，像地图尽头被打开了。", "parentCheck": "只问她画面里有没有地点和景物，不要求背诗。", "reward": "获得道具：海风语音卡"},
+      "review": "今天只需要记住：数轴0右边是正，左边是负；open 是打开。",
+      "tracking": {"completion": "未开始/完成部分/完成全部", "mathWrongTags": [], "englishWrongTags": [], "chineseResponseLength": "", "nextDayAdjustment": "如果数轴左右混淆，Day 3 先做左右定位再讲绝对值。"},
+      "reward": "完成后领取：地图坐标贴纸 1 张",
+      "parentGuide": {"doSay": "今天能完成十题就已经在建立节奏了。", "dontSay": "不要说昨天都会今天怎么不会，不追加错题惩罚。", "observe": "观察她对数轴左右方向是否容易混，如果混就用手势辅助。"}
+    },
+    "3": {
+      "title": "距离中心点：绝对值小试炼",
+      "dailyCatalog": {"mathChapter": "七年级上册 第1章 有理数", "mathTopic": "相反数与绝对值", "mathPoint": "相反数方向相反，绝对值表示到0的距离", "englishModule": "Starter Module 3 My English book", "englishWords": ["red", "blue", "desk", "bag", "map", "number", "book", "pen", "hello"], "englishMethod": "颜色和物品绑定：把单词贴到可看见的物品上", "chineseUnit": "七年级上册 第六单元", "chineseText": "写作表达：角色档案", "chineseTaskType": "写作表达：角色档案与剧情公告", "review": "复习 Day 1 hello，Day 2 book 和 pen", "stage": "第1-3天：新手引导，极简单，建立完成感"},
+      "moodCheck": {"question": "今天能量条大概是多少？", "options": ["1格：低能量，也可以通关", "2格：正常通关", "3格：加成挑战"], "rule": "1格时数学只看离0几格，语文可说一句；2格正常完成；3格可给原创角色补一个道具名。"},
+      "mathVideo": {"platform": "B站", "searchKeyword": "数学微课帮 七年级 相反数 绝对值", "watchTime": "7-9分钟", "watchGoal": "只记住绝对值是离0有多远"},
+      "warmup": "今天不比谁算得快，只练一个感觉：离0多远，就是距离。",
+      "englishVocab": [
+        {"word": "red", "pos": "adj./n.", "meaning": "红色的；红色", "memoryLogic": "red 很短，像红色警告灯一下亮起。", "gameScene": "红色药水：red potion。", "example": "It is red."},
+        {"word": "blue", "pos": "adj./n.", "meaning": "蓝色的；蓝色", "memoryLogic": "blue 和蓝色天空、蓝色能量条绑定。", "gameScene": "蓝色法力条：blue bar。", "example": "It is blue."},
+        {"word": "desk", "pos": "n.", "meaning": "书桌；课桌", "memoryLogic": "desk 是学习地图上的固定地点。", "gameScene": "任务点：go to the desk。", "example": "This is a desk."},
+        {"word": "bag", "pos": "n.", "meaning": "包；书包", "memoryLogic": "bag 像现实背包，装 book 和 pen。", "gameScene": "背包栏名称：bag。", "example": "My bag is blue."},
+        {"word": "map", "pos": "n.", "meaning": "地图", "memoryLogic": "map 直接对应游戏地图。", "gameScene": "Open the map.", "example": "This is a map."},
+        {"word": "number", "pos": "n.", "meaning": "数字；号码", "memoryLogic": "num 常和数字有关，number 是数字编号。", "gameScene": "角色编号：number 3。", "example": "What number is it?"},
+        {"word": "book", "pos": "n.", "meaning": "书", "memoryLogic": "复习词：book 是学习道具。", "gameScene": "Open your book.", "example": "This is my book."},
+        {"word": "pen", "pos": "n.", "meaning": "笔", "memoryLogic": "复习词：pen 是写字工具。", "gameScene": "Use a pen.", "example": "It is a pen."},
+        {"word": "hello", "pos": "interj.", "meaning": "你好", "memoryLogic": "复习词：进入对话先 hello。", "gameScene": "NPC says hello.", "example": "Hello, teacher."}
+      ],
+      "math": [
+        {"id": "m3_1", "point": "绝对值意义", "q": "|-3| 等于？", "options": ["A. 3", "B. -3", "C. 0"], "ans": 0, "hint": "绝对值看距离。", "explain": "-3 离0有3格，所以 |-3| = 3。", "encouragement": "距离不带负号，抓住了。"},
+        {"id": "m3_2", "point": "绝对值意义", "q": "|+4| 等于？", "options": ["A. -4", "B. 4", "C. 0"], "ans": 1, "hint": "+4离0有4格。", "explain": "+4 到0的距离是4，所以 |+4| = 4。", "encouragement": "正数的绝对值也能快速判断。"},
+        {"id": "m3_3", "point": "相反数", "q": "-5 的相反数是？", "options": ["A. +5", "B. -5", "C. 0"], "ans": 0, "hint": "方向换边，数字不变。", "explain": "-5 的相反数是 +5。", "encouragement": "镜像规则稳。"},
+        {"id": "m3_4", "point": "绝对值比较", "q": "|-2| 和 |+2| 的关系是？", "options": ["A. 相等", "B. |-2|更大", "C. |+2|更大"], "ans": 0, "hint": "都离0两格。", "explain": "-2 和 +2 到0的距离都是2，所以绝对值相等。", "encouragement": "能从距离角度看问题了。"},
+        {"id": "m3_5", "point": "远近比较", "q": "谁离0最近？", "options": ["A. +1", "B. -3", "C. +5"], "ans": 0, "hint": "看绝对值。", "explain": "+1 的绝对值是1，距离0最近。", "encouragement": "比较远近不难，方法对就行。"},
+        {"id": "m3_6", "point": "绝对值运算", "q": "|-6| - |+2| 的结果是？", "options": ["A. 4", "B. -4", "C. 8"], "ans": 0, "hint": "先分别算绝对值。", "explain": "|-6|=6，|+2|=2，6-2=4。", "encouragement": "这题有两步，你完成了。"},
+        {"id": "m3_7", "point": "相反数应用", "q": "0左边3格的点，它的相反数是？", "options": ["A. +3", "B. -3", "C. 0"], "ans": 0, "hint": "左边3格是 -3。", "explain": "0左边3格是 -3，-3 的相反数是 +3。", "encouragement": "先定位再换方向，很好。"},
+        {"id": "m3_8", "point": "绝对值反推", "q": "如果 |x|=4，x 可能是？", "options": ["A. +4或-4", "B. 只能+4", "C. 只能-4"], "ans": 0, "hint": "离0有4格有左右两个点。", "explain": "离0有4格的点有两个：+4 和 -4。", "encouragement": "这是绝对值很关键的一步。"},
+        {"id": "m3_9", "point": "数轴距离", "q": "A在 -2，B在 +3，AB相距几格？", "options": ["A. 1格", "B. 5格", "C. 3格"], "ans": 1, "hint": "中间经过0。", "explain": "-2 到0是2格，0到+3是3格，一共5格。", "encouragement": "跨0距离题也能拆。"},
+        {"id": "m3_10", "point": "绝对值应用", "q": "离0有5格且在左边，坐标是？", "options": ["A. +5", "B. -5", "C. 5格"], "ans": 1, "hint": "左边是负方向。", "explain": "离0有5格表示绝对值是5，在左边所以坐标是 -5。", "encouragement": "Day 3 数学升级版通关。"}
+      ],
+      "english": [
+        {"id": "e3_1", "point": "【颜色图像】", "q": "'red potion' 里的 'red' 给药水加了什么信息？", "options": ["A. 红色", "B. 数量", "C. 地点"], "ans": 0, "hint": "red 是颜色。", "explain": "red 是红色的。颜色词放在物品前面，像给物品贴颜色标签。", "encouragement": "颜色词不用硬背，直接看画面。"},
+        {"id": "e3_2", "point": "【颜色图像】", "q": "'blue bar' 更像什么？", "options": ["A. 蓝色能量条", "B. 红色书包", "C. 三张地图"], "ans": 0, "hint": "blue 是蓝色。", "explain": "blue 是蓝色的。blue bar 可以想成游戏界面的蓝色条。", "encouragement": "画面绑定完成。"},
+        {"id": "e3_3", "point": "【背包分类】", "q": "'bag' 最适合放在哪个分类里？", "options": ["A. 能装东西的包", "B. 一个颜色", "C. 一个数字"], "ans": 0, "hint": "bag 能装 book 和 pen。", "explain": "bag 是包、书包。用“能装东西”这个功能来记。", "encouragement": "功能记忆比死背轻。"},
+        {"id": "e3_4", "point": "【地图场景】", "q": "'Open the map.' 里的 'map' 是？", "options": ["A. 地图", "B. 课桌", "C. 笔"], "ans": 0, "hint": "map 是探索界面。", "explain": "map 是地图，和 open 放一起就是打开地图。", "encouragement": "你在用词块看句子。"},
+        {"id": "e3_5", "point": "【词根感知】", "q": "'number' 中的 'num/numer' 常和什么有关？", "options": ["A. 数字", "B. 颜色", "C. 朋友"], "ans": 0, "hint": "number 3。", "explain": "number 是数字、号码。看到 num/numer，可以先往数字方向猜。", "encouragement": "这就是用线索猜词。"},
+        {"id": "e3_6", "point": "【地点联想】", "q": "'desk' 最像学习地图里的哪个地点？", "options": ["A. 课桌/书桌", "B. 好友列表", "C. 天气"], "ans": 0, "hint": "写作业常在 desk 前。", "explain": "desk 是书桌、课桌。把它当成学习地图上的固定点。", "encouragement": "地点词也可以地图化。"},
+        {"id": "e3_7", "point": "【词缀法】", "q": "单词 'unhappy' 中，'un-' 通常表示？", "options": ["A. 不/否定", "B. 再一次", "C. 非常"], "ans": 0, "hint": "happy 是开心。", "explain": "un- 常表示否定，unhappy 就是不开心。先抓前缀，再看熟词。", "encouragement": "前缀像方向提示牌。"},
+        {"id": "e3_8", "point": "【逻辑词汇】", "q": "'dislike' = 'dis' + 'like'，'dis' 在这里表示？", "options": ["A. 相反/否定", "B. 加强语气", "C. 数字很多"], "ans": 0, "hint": "like 是喜欢。", "explain": "dis- 常有否定、相反的感觉，dislike 就是不喜欢。", "encouragement": "用熟词 like 推新词，很聪明。"},
+        {"id": "e3_9", "point": "【时态感知】", "q": "'I open the map every day.' 描述的是？", "options": ["A. 每天习惯做的事", "B. 正在发生的事", "C. 很久以前的事"], "ans": 0, "hint": "every day 是每天。", "explain": "every day 常提示一般现在时，表示习惯或经常发生的动作。", "encouragement": "时态先抓时间词就好。"},
+        {"id": "e3_10", "point": "【句子拼图】", "q": "'My bag is blue.' 先抓哪两个关键词？", "options": ["A. bag + blue", "B. teacher + hello", "C. map + number"], "ans": 0, "hint": "bag 是包，blue 是蓝色。", "explain": "这句的核心是“包 + 蓝色”：我的包是蓝色的。", "encouragement": "Day 3 英语委托完成。"}
+      ],
+      "chinese": {"title": "角色档案：原创小队成员", "time": "10-15分钟", "chineseCatalog": {"textbook": "部编版七年级语文", "unit": "七年级上册 第六单元", "text": "写作表达：角色档案", "genre": "片段写作", "learningPoint": "用少量文字写清外观和特点", "taskType": "写作表达：角色档案与剧情公告", "stage": "前15天轻量日常委托", "examAbility": "基础描写与表达"}, "mission": "原创一个角色，不用写故事。只写外观、一个小能力、一个性格特点。", "answerFormat": "20-50字：角色叫____，外观____，能力____，性格____。", "sampleAnswer": "角色叫星灯，披着浅蓝斗篷，能照亮小地图。她话不多，但会悄悄把队友拉回来。", "parentCheck": "只看是否写满20字左右，不改错别字，不要求重写。", "reward": "获得道具：角色档案页"},
+      "review": "今天只需要记住：绝对值是离0的距离；red 和 blue 是两个颜色词。",
+      "tracking": {"completion": "未开始/完成部分/完成全部", "mathWrongTags": [], "englishWrongTags": [], "chineseResponseLength": "", "nextDayAdjustment": "如果绝对值仍带负号，Day 4 先重复距离不带负号，再推进新知识。"},
+      "reward": "完成后领取：新手三日连续通关徽章",
+      "parentGuide": {"doSay": "三天能连着做，比一次做很多更重要。", "dontSay": "不要说题太简单，不用拿她和别人比较。", "observe": "观察她更愿意做选择题、单词场景还是语文创作，后面可用来调整入口。"}
+    },
+    "4": {
+      "title": "修复日：把距离感再点亮",
+      "dailyCatalog": {"mathChapter": "七年级上册 第1章 有理数", "mathTopic": "绝对值复习", "mathPoint": "绝对值表示到0的距离，结果不带负号", "englishModule": "Starter Module 3 My English book", "englishWords": ["one", "two", "three", "four", "five", "red", "blue", "map"], "englishMethod": "数字绑定：把数字想成角色编号和任务编号", "chineseUnit": "七年级上册 第一单元", "chineseText": "济南的冬天", "chineseTaskType": "现代文阅读：地图与镜头设计", "review": "复习 red、blue、map 和绝对值距离", "stage": "第4-7天：半常识、半知识，每题只考一个最小知识点"},
+      "moodCheck": {"question": "今天能量条大概是多少？", "options": ["1格：低能量，也可以通关", "2格：正常通关", "3格：加成挑战"], "rule": "1格时只看关键词和选项；2格正常完成；3格可给今天的地图起一个名字。"},
+      "mathVideo": {"platform": "B站", "searchKeyword": "数学微课帮 七年级 绝对值", "watchTime": "7-9分钟", "watchGoal": "只记住绝对值是离0的距离"},
+      "warmup": "今天是修复日，不急着冲新关卡，先把距离规则稳稳放进背包。",
+      "englishVocab": [
+        {"word": "one", "pos": "num.", "meaning": "一", "memoryLogic": "one 是第1号角色或第1个任务。", "gameScene": "Task one starts.", "example": "One book."},
+        {"word": "two", "pos": "num.", "meaning": "二", "memoryLogic": "two 像两名队友一起出发。", "gameScene": "Two friends join.", "example": "Two pens."},
+        {"word": "three", "pos": "num.", "meaning": "三", "memoryLogic": "three 是三人小队编号。", "gameScene": "Team three is ready.", "example": "Three maps."},
+        {"word": "four", "pos": "num.", "meaning": "四", "memoryLogic": "four 可以想成四个方向：东南西北。", "gameScene": "Four doors open.", "example": "Four desks."},
+        {"word": "five", "pos": "num.", "meaning": "五", "memoryLogic": "five 像五格能量条满格。", "gameScene": "Five stars appear.", "example": "Five books."},
+        {"word": "red", "pos": "adj./n.", "meaning": "红色的；红色", "memoryLogic": "复习词：red 是红色警告灯。", "gameScene": "Red potion.", "example": "It is red."},
+        {"word": "blue", "pos": "adj./n.", "meaning": "蓝色的；蓝色", "memoryLogic": "复习词：blue 是蓝色能量条。", "gameScene": "Blue bag.", "example": "It is blue."},
+        {"word": "map", "pos": "n.", "meaning": "地图", "memoryLogic": "复习词：map 是探索地图。", "gameScene": "Open the map.", "example": "This is a map."}
+      ],
+      "math": [
+        {"id": "m4_1", "point": "绝对值复习", "q": "|+1| 是几？", "options": ["A. 1", "B. -1", "C. 0"], "ans": 0, "hint": "离0一格。", "explain": "|+1| 表示 +1 到0的距离，是1。", "encouragement": "热身题稳稳拿下。"},
+        {"id": "m4_2", "point": "绝对值复习", "q": "|-4| 是几？", "options": ["A. -4", "B. 4", "C. 0"], "ans": 1, "hint": "距离不带负号。", "explain": "-4 离0有4格，所以 |-4| = 4。", "encouragement": "负号没有干扰你。"},
+        {"id": "m4_3", "point": "绝对值运算", "q": "|-3| + |+2| 的结果是？", "options": ["A. 5", "B. 1", "C. -5"], "ans": 0, "hint": "先算两个距离。", "explain": "|-3|=3，|+2|=2，3+2=5。", "encouragement": "两步计算启动成功。"},
+        {"id": "m4_4", "point": "绝对值运算", "q": "|-5| - |-2| 的结果是？", "options": ["A. 3", "B. -3", "C. 7"], "ans": 0, "hint": "先去掉绝对值。", "explain": "|-5|=5，|-2|=2，5-2=3。", "encouragement": "先算距离，再做减法。"},
+        {"id": "m4_5", "point": "绝对值识别", "q": "哪个数的绝对值是3？", "options": ["A. -3", "B. +4", "C. 0"], "ans": 0, "hint": "离0三格。", "explain": "-3 到0的距离是3，所以绝对值是3。", "encouragement": "前5题比原来更有含金量。"},
+        {"id": "m4_6", "point": "数轴距离", "q": "-1 和 +4 相距几格？", "options": ["A. 3格", "B. 5格", "C. 4格"], "ans": 1, "hint": "要经过0。", "explain": "-1 到0是1格，0到+4是4格，共5格。", "encouragement": "跨0距离题已经熟了。"},
+        {"id": "m4_7", "point": "绝对值反推", "q": "x在0右边，且 |x|=6，x是？", "options": ["A. +6", "B. -6", "C. 0"], "ans": 0, "hint": "右边是正方向。", "explain": "|x|=6 表示离0有6格，在右边就是 +6。", "encouragement": "条件组合起来也能判断。"},
+        {"id": "m4_8", "point": "相反数与绝对值", "q": "-2的相反数 + |-3| 等于？", "options": ["A. 5", "B. 1", "C. -5"], "ans": 0, "hint": "-2的相反数是+2。", "explain": "-2的相反数是 +2，|-3|=3，2+3=5。", "encouragement": "这题是今天的小高光。"},
+        {"id": "m4_9", "point": "坐标反推", "q": "从 -4 向右走6格，到达？", "options": ["A. +2", "B. -10", "C. +6"], "ans": 0, "hint": "-4到0用4格。", "explain": "-4 向右6格，先到0用4格，再向右2格，到 +2。", "encouragement": "轻挑战移动题完成。"},
+        {"id": "m4_10", "point": "综合判断", "q": "哪句话正确？", "options": ["A. |-7|=7", "B. |-7|=-7", "C. |0|=7"], "ans": 0, "hint": "绝对值是距离。", "explain": "-7 到0的距离是7，所以 |-7|=7。", "encouragement": "Day 4 数学升级版完成。"}
+      ],
+      "english": [
+        {"id": "e4_1", "point": "【数字编号】", "q": "'Task one' 里的 'one' 表示？", "options": ["A. 第1个/一", "B. 第5个", "C. 很多"], "ans": 0, "hint": "one 是 1。", "explain": "one 表示一，也可以放进任务编号里记：Task one。", "encouragement": "数字词入口很轻。"},
+        {"id": "e4_2", "point": "【复数感知】", "q": "'two pens' 里为什么 pen 后面有 s？", "options": ["A. 不止一支", "B. 表示否定", "C. 表示重新"], "ans": 0, "hint": "two 是二。", "explain": "two 表示两个，pens 里的 -s 提醒我们数量不止一个。", "encouragement": "语法先从小信号看起。"},
+        {"id": "e4_3", "point": "【数字词汇】", "q": "'three maps' 表示几张地图？", "options": ["A. 3张", "B. 1张", "C. 5张"], "ans": 0, "hint": "three 是三。", "explain": "three maps = 三张地图。maps 的 -s 也提示复数。", "encouragement": "数字 + 名词复数连起来了。"},
+        {"id": "e4_4", "point": "【方位联想】", "q": "'four' 可以联想到哪组画面帮助记忆？", "options": ["A. 四个方向", "B. 一个问候", "C. 一个老师"], "ans": 0, "hint": "东南西北。", "explain": "four 是四，可以和四个方向绑定，帮助记忆更有画面。", "encouragement": "联想不是乱想，是给词一个位置。"},
+        {"id": "e4_5", "point": "【奖励场景】", "q": "'five stars' 更像哪个奖励画面？", "options": ["A. 五颗星", "B. 两本书", "C. 一支笔"], "ans": 0, "hint": "five 是五。", "explain": "five stars = 五颗星。把数字放进奖励界面，很好记。", "encouragement": "前5题稳定通关。"},
+        {"id": "e4_6", "point": "【后缀感知】", "q": "'books' 比 'book' 多了 '-s'，通常表示？", "options": ["A. 复数", "B. 否定", "C. 重新"], "ans": 0, "hint": "不止一本。", "explain": "名词后面的 -s 常提示复数。books 就是不止一本书。", "encouragement": "小尾巴也能提供信息。"},
+        {"id": "e4_7", "point": "【颜色词块】", "q": "'red bag' 先看哪个词给颜色？", "options": ["A. red", "B. bag", "C. one"], "ans": 0, "hint": "red 是红色。", "explain": "red 给 bag 加颜色信息，red bag = 红色的包。", "encouragement": "词块顺序看懂了。"},
+        {"id": "e4_8", "point": "【颜色词块】", "q": "'blue book' 的核心物品是？", "options": ["A. book", "B. blue", "C. two"], "ans": 0, "hint": "blue 是颜色，book 是物品。", "explain": "blue 修饰 book，核心物品是 book，颜色是 blue。", "encouragement": "这就是看英文词组的主干。"},
+        {"id": "e4_9", "point": "【词缀复习】", "q": "'reopen' = 're-' + 'open'，意思更接近？", "options": ["A. 重新打开", "B. 不打开", "C. 蓝色打开"], "ans": 0, "hint": "re- 是再次、重新。", "explain": "re- 给 open 加上“再一次”的意思，所以 reopen 是重新打开。", "encouragement": "词缀法正在变成工具。"},
+        {"id": "e4_10", "point": "【时态感知】", "q": "'I play every day.' 里的 'every day' 提示？", "options": ["A. 每天习惯发生", "B. 正在发生", "C. 过去只发生一次"], "ans": 0, "hint": "every day 是每天。", "explain": "every day 常提示一般现在时，表示习惯。先抓时间词，时态就不吓人。", "encouragement": "Day 4 英语委托完成。"}
+      ],
+      "chinese": {"title": "镜头任务：冬天地图的温度", "time": "10-15分钟", "chineseCatalog": {"textbook": "部编版七年级语文", "unit": "七年级上册 第一单元", "text": "济南的冬天", "genre": "写景散文", "learningPoint": "从一个自然段里感受地点氛围", "taskType": "现代文阅读：地图与镜头设计", "stage": "前15天轻量日常委托", "examAbility": "提取环境氛围"}, "mission": "读《济南的冬天》第1自然段。把它想象成一个冬天地图：这个地图给人的感觉更冷硬，还是更温和？", "answerFormat": "用20-40字写或说：这个冬天地图像____，因为____。", "sampleAnswer": "这个冬天地图像一个安静的小城副本，因为它不凶，感觉有一点暖。", "parentCheck": "只确认她能说出一种感觉，不要求标准答案。", "reward": "获得道具：温度滤镜卡"},
+      "review": "今天只需要记住：绝对值结果不带负号；one 到 five 是1到5。",
+      "tracking": {"completion": "未开始/完成部分/完成全部", "mathWrongTags": [], "englishWrongTags": [], "chineseResponseLength": "", "nextDayAdjustment": "如果绝对值仍连续错2次，Day 5 不推进加减，只继续用数轴距离修复。"},
+      "reward": "完成后领取：距离感稳定器",
+      "parentGuide": {"doSay": "今天是在巩固，不是退步，规则稳了后面会更轻松。", "dontSay": "不要说都讲过了怎么还错，不加量。", "observe": "看她是否把距离写成负数，记录标签即可。"}
+    }
+  }
+}
+  </script>
+
+  <script>
+    const DATA = JSON.parse(document.getElementById("plan-data").textContent);
+    const state = {
+      view: "catalog",
+      subject: "all",
+      search: ""
+    };
+
+    const WRONG_BOOK_KEY = "grade7LearningWrongBook.v1";
+    let wrongBook = loadWrongBook();
+
+    const titleEl = document.getElementById("pageTitle");
+    const introEl = document.getElementById("pageIntro");
+    const contentEl = document.getElementById("content");
+    const tabsEl = document.getElementById("viewTabs");
+    const statsEl = document.getElementById("stats");
+    const searchEl = document.getElementById("searchInput");
+    const subjectFilterEl = document.getElementById("subjectFilter");
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function answerLetter(index) {
+      return ["A", "B", "C"][index] || "";
+    }
+
+    function includesSearch(value) {
+      const needle = state.search.trim().toLowerCase();
+      if (!needle) return true;
+      return JSON.stringify(value).toLowerCase().includes(needle);
+    }
+
+    function visibleBySubject(subject) {
+      return state.subject === "all" || state.subject === subject;
+    }
+
+    function pill(text, subject = "") {
+      return `<span class="tag ${subject}">${escapeHtml(text)}</span>`;
+    }
+
+    function loadWrongBook() {
+      try {
+        const raw = localStorage.getItem(WRONG_BOOK_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveWrongBook() {
+      localStorage.setItem(WRONG_BOOK_KEY, JSON.stringify(wrongBook));
+    }
+
+    function subjectLabel(subject) {
+      return { math: "数学", english: "英语", chinese: "语文" }[subject] || subject;
+    }
+
+    function findQuestion(dayId, subject, questionId) {
+      const day = DATA.days[dayId];
+      if (!day || !Array.isArray(day[subject])) return null;
+      return day[subject].find(item => item.id === questionId) || null;
+    }
+
+    function recordWrong(card, selectedIndex, correctIndex) {
+      const dayId = card.dataset.day;
+      const subject = card.dataset.subject;
+      const questionId = card.dataset.questionId;
+      const item = findQuestion(dayId, subject, questionId);
+      if (!item) return;
+
+      const key = `${dayId}:${subject}:${questionId}`;
+      const now = new Date().toISOString();
+      const existing = wrongBook.find(record => record.key === key);
+      const nextRecord = {
+        key,
+        dayId,
+        subject,
+        subjectLabel: subjectLabel(subject),
+        questionId,
+        point: item.point,
+        q: item.q,
+        options: item.options,
+        ans: item.ans,
+        selectedIndex,
+        selectedOption: item.options[selectedIndex],
+        correctIndex,
+        correctOption: item.options[correctIndex],
+        hint: item.hint,
+        explain: item.explain,
+        encouragement: item.encouragement,
+        wrongCount: existing ? existing.wrongCount + 1 : 1,
+        firstWrongAt: existing ? existing.firstWrongAt : now,
+        lastWrongAt: now
+      };
+
+      if (existing) {
+        wrongBook = wrongBook.map(record => record.key === key ? nextRecord : record);
+      } else {
+        wrongBook = [nextRecord, ...wrongBook];
+      }
+
+      saveWrongBook();
+      renderStats();
+    }
+
+    function removeWrong(key) {
+      wrongBook = wrongBook.filter(record => record.key !== key);
+      saveWrongBook();
+      render();
+    }
+
+    function clearWrongBook() {
+      wrongBook = [];
+      saveWrongBook();
+      render();
+    }
+
+    function renderArrayPills(items, subject) {
+      return (items || []).map(item => pill(item, subject)).join("");
+    }
+
+    function renderMathCatalogCard(item) {
+      return `
+        <article class="card" data-subject="math">
+          <h4>${escapeHtml(item.volume)} ${escapeHtml(item.chapter)}</h4>
+          <p>${escapeHtml(item.unitGoal)}</p>
+          <div class="detail-list">
+            ${(item.sections || []).map(section => `
+              <div class="detail-row">
+                <b>${escapeHtml(section.code)} ${escapeHtml(section.title)}</b>
+                <span>${escapeHtml((section.points || []).join(" / "))}</span>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderEnglishCatalogCard(item) {
+      return `
+        <article class="card" data-subject="english">
+          <h4>${escapeHtml(item.volume)} ${escapeHtml(item.module)}</h4>
+          <div class="catalog-meta">${renderArrayPills(item.themes, "english")}</div>
+          <p><b>单词范围：</b>${escapeHtml((item.wordRange || []).join(" / "))}</p>
+          <p><b>核心语法：</b>${escapeHtml((item.grammar || []).join(" / "))}</p>
+          <p><b>能力目标：</b>${escapeHtml((item.skills || []).join(" / "))}</p>
+          <div class="tags">${renderArrayPills(item.memoryMethods, "english")}</div>
+        </article>
+      `;
+    }
+
+    function renderChineseCatalogCard(item) {
+      return `
+        <article class="card" data-subject="chinese">
+          <h4>${escapeHtml(item.volume)} ${escapeHtml(item.unit)}</h4>
+          <ul class="text-list">
+            ${(item.texts || []).map(text => `
+              <li><b>${escapeHtml(text.title)}</b>｜${escapeHtml(text.genre)}｜${escapeHtml(text.type)}</li>
+            `).join("")}
+          </ul>
+          <p><b>写作：</b>${escapeHtml(item.writing || "无")}</p>
+          <p><b>综合性学习：</b>${escapeHtml(item.integrated || "无")}</p>
+          <p><b>名著导读：</b>${escapeHtml(item.classicReading || "无")}</p>
+          ${(item.extraPoems || []).length ? `<p><b>课外古诗词：</b>${escapeHtml(item.extraPoems.join(" / "))}</p>` : ""}
+          <div class="tags">${renderArrayPills(item.abilities, "chinese")}</div>
+        </article>
+      `;
+    }
+
+    function buildRoadmap45() {
+      return [
+        { day: 1, phase: "启动", math: "有理数：正负数与变化量", english: "Starter M1：问候、自我介绍、拆词入门", chinese: "七上第一单元：《春》画面阅读", output: "完成10题，建立开始感" },
+        { day: 2, phase: "启动", math: "有理数：数轴、坐标移动", english: "Starter M2：课堂指令、open/listen动作词", chinese: "《观沧海》一句诗意破译", output: "能把左右方向转成正负数" },
+        { day: 3, phase: "启动", math: "有理数：相反数、绝对值", english: "Starter M3：颜色、物品、词缀un-/dis-", chinese: "角色档案20-50字", output: "知道绝对值是距离" },
+        { day: 4, phase: "修复", math: "绝对值复习与两步小运算", english: "Starter M3数字词、复数-s、re-复习", chinese: "《济南的冬天》氛围镜头", output: "低压力修复日" },
+        { day: 5, phase: "有理数", math: "有理数加法：同号、异号", english: "Starter M4：星期、天气、运动", chinese: "《雨的四季》一个画面", output: "会算简单回血/掉血" },
+        { day: 6, phase: "有理数", math: "有理数减法：减法转加法", english: "Module 1：classmates与be动词", chinese: "古诗四首意象卡", output: "会把消耗/获得写成算式" },
+        { day: 7, phase: "有理数", math: "乘除符号法则、倒数", english: "Module 1：身份档案表达", chinese: "第一单元写作：观察一处景", output: "完成第一周小复盘" },
+        { day: 8, phase: "有理数", math: "乘方、混合运算顺序", english: "Module 2：family与职业词", chinese: "《秋天的怀念》人物情绪", output: "混合运算只做短题" },
+        { day: 9, phase: "有理数", math: "科学记数法、近似数", english: "Module 2：this/that/these/those", chinese: "《散步》场景选择", output: "第1章通关检测" },
+        { day: 10, phase: "整式", math: "代数式：用字母表示数", english: "Module 3：school地点词", chinese: "散文诗二首：一句改写", output: "会把背包材料写成代数式" },
+        { day: 11, phase: "整式", math: "单项式、多项式、整式", english: "Module 3：there be与方位介词", chinese: "《世说新语》一句文言破译", output: "会识别项和次数" },
+        { day: 12, phase: "整式", math: "同类项、合并同类项", english: "Module 4：food与healthy", chinese: "第二单元写作：一件小事", output: "背包材料合并题" },
+        { day: 13, phase: "整式", math: "去括号、整式加减", english: "Module 4：some/any、可数不可数", chinese: "《从百草园到三味书屋》童年地图", output: "第2章通关检测" },
+        { day: 14, phase: "方程", math: "一元一次方程与等式性质", english: "Module 5：school day课程表", chinese: "《再塑生命的人》人物变化", output: "知道方程是反推工具" },
+        { day: 15, phase: "方程", math: "移项、去括号解方程", english: "Module 5：时间表达at/on/in", chinese: "《论语》一句学习信条", output: "开始教材基础题" },
+        { day: 16, phase: "方程", math: "去分母解一元一次方程", english: "Module 6：zoo动物词", chinese: "写人抓特点：角色观察", output: "方程步骤卡" },
+        { day: 17, phase: "方程", math: "一元一次方程简单应用", english: "Module 6：第三人称单数", chinese: "课外古诗词四首选一句", output: "会设未知数" },
+        { day: 18, phase: "方程组", math: "二元一次方程组：代入消元", english: "Module 7：computer操作词", chinese: "《纪念白求恩》人物品质", output: "两个未知量入门" },
+        { day: 19, phase: "方程组", math: "加减消元与方程组应用", english: "Module 7：频度副词", chinese: "《植树的牧羊人》行动步骤", output: "第3章通关检测" },
+        { day: 20, phase: "几何", math: "点线面体、线段射线直线", english: "Module 8：birthday与present", chinese: "《走一步，再走一步》步骤表达", output: "几何语言入门" },
+        { day: 21, phase: "几何", math: "线段比较、中点、两点间线段最短", english: "Module 8：always/often/never", chinese: "《诫子书》一句劝勉", output: "线段小题" },
+        { day: 22, phase: "几何", math: "角的表示、度量、分类", english: "Module 9：people and places", chinese: "《猫》态度变化", output: "会读角和度数" },
+        { day: 23, phase: "几何", math: "角平分线、余角、补角", english: "Module 9：现在进行时be doing", chinese: "《动物笑谈》细节观察", output: "第4章通关检测" },
+        { day: 24, phase: "统计", math: "数据收集：全面调查、抽样调查", english: "Module 10：Spring Festival词汇", chinese: "《狼》文言故事破译", output: "统计表入门" },
+        { day: 25, phase: "统计", math: "频数、频率、统计图", english: "Module 10：现在进行时复习", chinese: "第五单元写作：突出中心", output: "第5章通关检测" },
+        { day: 26, phase: "实数", math: "平方根、算术平方根", english: "七下M1：lost and found、物主代词", chinese: "《皇帝的新装》剧情公告", output: "进入七下数学" },
+        { day: 27, phase: "实数", math: "立方根、无理数、实数分类", english: "七下M2：can能力表达", chinese: "《天上的街市》想象镜头", output: "第6章通关检测" },
+        { day: 28, phase: "不等式", math: "不等式意义与基本性质", english: "七下M3：be going to计划", chinese: "《女娲造人》设定改写", output: "会读范围" },
+        { day: 29, phase: "不等式", math: "解一元一次不等式、数轴表示", english: "七下M4：will未来预测", chinese: "《寓言四则》寓意卡", output: "不等式步骤卡" },
+        { day: 30, phase: "不等式组", math: "不等式组与公共解集", english: "七下M5：shopping价格数量", chinese: "《西游记》精读跳读", output: "第7章通关检测" },
+        { day: 31, phase: "整式乘法", math: "同底数幂、幂的乘方、积的乘方", english: "七下M6：around town问路", chinese: "七下《邓稼先》人物精神", output: "幂运算入门" },
+        { day: 32, phase: "整式乘法", math: "单项式乘法、多项式乘法", english: "七下M7：past life、was/were", chinese: "《说和做》人物细节", output: "整式乘法练习" },
+        { day: 33, phase: "公式", math: "平方差公式、完全平方公式", english: "七下M8：story time一般过去时", chinese: "《回忆鲁迅先生》旁批阅读", output: "公式识别" },
+        { day: 34, phase: "因式分解", math: "提公因式法、公式法", english: "七下M9：life history时间线", chinese: "《孙权劝学》文言破译", output: "第8章通关检测" },
+        { day: 35, phase: "分式", math: "分式概念、有意义条件、约分", english: "七下M10：holiday journey", chinese: "七下第二单元诗歌与《木兰诗》", output: "分式条件意识" },
+        { day: 36, phase: "分式", math: "分式通分、加减乘除", english: "七下M11：body language", chinese: "《阿长与山海经》《老王》细节", output: "分式运算短题" },
+        { day: 37, phase: "分式方程", math: "分式方程、验根、增根", english: "七下M12：Western music", chinese: "《台阶》《卖油翁》人物与文言", output: "第9章通关检测" },
+        { day: 38, phase: "平面几何", math: "相交线、对顶角、邻补角、垂线", english: "七上七下词缀词根总复习1", chinese: "《骆驼祥子》圈点批注", output: "角关系入门" },
+        { day: 39, phase: "平行线", math: "同位角、内错角、同旁内角", english: "七上七下核心语法总复习1", chinese: "七下第四单元：选材与托物言志", output: "识别角的位置" },
+        { day: 40, phase: "平行线", math: "平行线判定与性质", english: "七上七下核心语法总复习2", chinese: "七下第五单元：托物抒情与古诗五首", output: "第10章核心通关" },
+        { day: 41, phase: "平移", math: "平移方向、距离、对应点线角", english: "七上七下模块词汇总复习", chinese: "七下第六单元：科学与探险", output: "七下数学收束" },
+        { day: 42, phase: "总复盘", math: "有理数、整式、方程错题回收", english: "Starter+七上M1-M5错词回收", chinese: "七上1-3单元复盘", output: "错题本第一轮清理" },
+        { day: 43, phase: "总复盘", math: "几何、统计、实数、不等式错题回收", english: "七上M6-M10错词回收", chinese: "七上4-6单元复盘", output: "错题本第二轮清理" },
+        { day: 44, phase: "总复盘", math: "整式乘法、分式、平行线错题回收", english: "七下M1-M6错词回收", chinese: "七下1-3单元复盘", output: "错题本第三轮清理" },
+        { day: 45, phase: "通关", math: "全册基础通关卷：只做核心题", english: "七下M7-M12错词回收与短句", chinese: "七下4-6单元复盘+自由表达", output: "生成下一轮补弱清单" }
+      ];
+    }
+
+    function renderStats() {
+      const days = Object.values(DATA.days);
+      const mathQuestions = days.reduce((sum, day) => sum + day.math.length, 0);
+      const englishQuestions = days.reduce((sum, day) => sum + day.english.length, 0);
+      const words = days.reduce((sum, day) => sum + day.englishVocab.length, 0);
+      statsEl.innerHTML = `
+        <div class="stat"><strong>${days.length}</strong><span>已生成天数</span></div>
+        <div class="stat"><strong>45</strong><span>总路线天数</span></div>
+        <div class="stat"><strong>${mathQuestions}</strong><span>数学题</span></div>
+        <div class="stat"><strong>${englishQuestions}</strong><span>英语题</span></div>
+        <div class="stat"><strong>${words}</strong><span>单词卡</span></div>
+        <div class="stat"><strong>${wrongBook.length}</strong><span>错题本</span></div>
+      `;
+    }
+
+    function renderTabs() {
+      const tabs = [
+        { id: "catalog", label: "目录总览" },
+        { id: "roadmap", label: "45天路线" },
+        { id: "wrongbook", label: "错题本" },
+        { id: "share", label: "微信分享" }
+      ]
+        .concat(Object.keys(DATA.days).map(day => ({ id: day, label: `Day ${day}` })));
+      tabsEl.innerHTML = tabs.map(tab => `
+        <button class="tab-btn" type="button" data-view="${tab.id}" aria-selected="${state.view === tab.id}">
+          ${escapeHtml(tab.label)}
+        </button>
+      `).join("");
+    }
+
+    function renderCatalog() {
+      titleEl.textContent = "Coverage Catalog";
+      introEl.textContent = "七年级上下册完整学习地图：数学按章节和小节，英语按模块、词汇范围和语法，语文按课文、写作、名著与课外古诗词展开。";
+      const parts = [];
+
+      if (visibleBySubject("math")) {
+        const cards = DATA.coverageCatalog.math
+          .filter(includesSearch)
+          .map(renderMathCatalogCard).join("");
+        parts.push(`<section class="section"><h3>数学</h3><div class="catalog-list">${cards || emptyBlock()}</div></section>`);
+      }
+
+      if (visibleBySubject("english")) {
+        const cards = DATA.coverageCatalog.english
+          .filter(includesSearch)
+          .map(renderEnglishCatalogCard).join("");
+        parts.push(`<section class="section"><h3>英语</h3><div class="catalog-list">${cards || emptyBlock()}</div></section>`);
+      }
+
+      if (visibleBySubject("chinese")) {
+        const cards = DATA.coverageCatalog.chinese
+          .filter(includesSearch)
+          .map(renderChineseCatalogCard).join("");
+        parts.push(`<section class="section"><h3>语文</h3><div class="catalog-list">${cards || emptyBlock()}</div></section>`);
+      }
+
+      contentEl.innerHTML = parts.join("") || emptyBlock("没有匹配内容");
+    }
+
+    function renderRoadmap() {
+      titleEl.textContent = "45天路线";
+      introEl.textContent = "这是七年级上下册第一轮通关安排：每天三科都碰到，但以建立框架和补基础为目标，不等于45天内深度刷透。";
+      const roadmap = buildRoadmap45().filter(includesSearch);
+      const cards = roadmap.map(item => `
+        <article class="roadmap-day">
+          <div class="roadmap-index">
+            <strong>Day ${item.day}</strong>
+            <span>${escapeHtml(item.phase)}</span>
+          </div>
+          <div>
+            <div class="roadmap-subjects">
+              <div class="roadmap-subject"><b>数学</b><span>${escapeHtml(item.math)}</span></div>
+              <div class="roadmap-subject"><b>英语</b><span>${escapeHtml(item.english)}</span></div>
+              <div class="roadmap-subject"><b>语文</b><span>${escapeHtml(item.chinese)}</span></div>
+            </div>
+            <div class="tags">${pill(item.output)}</div>
+          </div>
+        </article>
+      `).join("");
+
+      contentEl.innerHTML = `
+        <section class="section">
+          <article class="card notice">
+            <h3>安排原则</h3>
+            <p>每天建议 90-120 分钟：数学 35-45 分钟，英语 30-40 分钟，语文 10-15 分钟，剩余时间做错题回收。低能量日不加量，只降低题面压力。</p>
+            <p>45天适合做“第一轮全图开荒”。如果目标是校内考试稳定提分，建议第46-90天专门做第二轮：错题、计算、阅读、单词循环。</p>
+          </article>
+        </section>
+        <section class="section">
+          <h3>每日路线</h3>
+          <div class="roadmap-list">${cards || emptyBlock()}</div>
+        </section>
+      `;
+    }
+
+    function renderWrongBook() {
+      titleEl.textContent = "错题本";
+      introEl.textContent = "答错的数学和英语选择题会自动进入这里。错题只用于修复，不用于惩罚或加量。";
+      const records = wrongBook
+        .filter(record => visibleBySubject(record.subject))
+        .filter(includesSearch)
+        .slice()
+        .sort((a, b) => String(b.lastWrongAt).localeCompare(String(a.lastWrongAt)));
+
+      const cards = records.map(record => `
+        <article class="card wrong-card">
+          <div class="wrong-meta">
+            ${pill(`Day ${record.dayId}`)}
+            ${pill(record.subjectLabel, record.subject)}
+            ${pill(record.point, record.subject)}
+            ${pill(`错 ${record.wrongCount} 次`)}
+          </div>
+          <h4>${escapeHtml(record.q)}</h4>
+          <p><b>上次选择：</b>${escapeHtml(record.selectedOption || "")}</p>
+          <p><b>正确答案：</b>${escapeHtml(record.correctOption || record.options?.[record.ans] || "")}</p>
+          <p><b>提示：</b>${escapeHtml(record.hint)}</p>
+          <p><b>解析：</b>${escapeHtml(record.explain)}</p>
+          <div class="wrongbook-tools">
+            <button type="button" class="mini-btn remove-wrong-btn" data-key="${escapeHtml(record.key)}">移出错题本</button>
+          </div>
+        </article>
+      `).join("");
+
+      contentEl.innerHTML = `
+        <section class="section">
+          <article class="card notice">
+            <h3>自动记录规则</h3>
+            <p>选择错误时自动记录题目、所选答案、正确答案、解析和错误次数。点“揭晓答案”不会记为错题。</p>
+            <div class="wrongbook-tools">
+              <button type="button" class="mini-btn clear-wrongbook-btn">清空错题本</button>
+            </div>
+          </article>
+        </section>
+        <section class="section">
+          <h3>当前错题</h3>
+          <div class="wrongbook-list">${cards || emptyBlock("现在还没有错题。这里空着，也是一种很好的状态。")}</div>
+        </section>
+      `;
+    }
+
+    function renderShareGuide() {
+      titleEl.textContent = "微信分享";
+      introEl.textContent = "当前页面是本地文件，直接把 127.0.0.1 或 file:// 发给孩子通常打不开。需要换成孩子设备能访问的地址。";
+      contentEl.innerHTML = `
+        <section class="section">
+          <div class="grid two">
+            <article class="card">
+              <h3>临时方案：同一 Wi-Fi</h3>
+              <div class="share-steps">
+                <p>1. 让电脑和孩子手机连接同一个 Wi-Fi。</p>
+                <p>2. 保持本地服务运行：<code>python3 -m http.server 8000</code></p>
+                <p>3. 查询电脑局域网 IP，例如 192.168.x.x。</p>
+                <p>4. 发给孩子：<code>http://电脑IP:8000/learning-plan-preview.html</code></p>
+                <p>电脑关机、睡眠、换网络后，这个链接会失效。</p>
+              </div>
+            </article>
+            <article class="card">
+              <h3>长期方案：发布成网页</h3>
+              <div class="share-steps">
+                <p>把 <code>learning-plan-preview.html</code> 上传到 GitHub Pages、Netlify、Vercel、对象存储或学校/家庭服务器，得到一个 HTTPS 链接后，通过微信发送。</p>
+                <p>这是最适合孩子每天做的方式：手机、平板、电脑都能打开，链接不会依赖你的电脑是否开着。</p>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="section">
+          <article class="card notice">
+            <h3>关于错题记录</h3>
+            <p>错题本保存在打开页面的那个浏览器里。孩子用手机做，错题就保存在孩子手机浏览器；你电脑里的错题本不会自动同步过去。</p>
+          </article>
+        </section>
+      `;
+    }
+
+    function renderDay(dayId) {
+      const day = DATA.days[dayId];
+      titleEl.textContent = `Day ${dayId}`;
+      introEl.textContent = day.title;
+
+      const sections = [
+        renderDayHeader(dayId, day),
+        renderVocab(day),
+        visibleBySubject("math") ? renderQuestions("数学 10 题", day.math, "math", dayId) : "",
+        visibleBySubject("english") ? renderEnglishMission(day, dayId) : "",
+        visibleBySubject("chinese") && includesSearch(day.chinese) ? renderChinese(day) : "",
+        renderReview(day)
+      ].filter(Boolean);
+
+      contentEl.innerHTML = sections.join("") || emptyBlock("没有匹配内容");
+    }
+
+    function renderDayHeader(dayId, day) {
+      if (!includesSearch(day.dailyCatalog) && !includesSearch(day.moodCheck) && !includesSearch(day.mathVideo) && state.search) return "";
+      return `
+        <section class="section">
+          <div class="day-head">
+            <div class="card soft">
+              <h3 class="day-title">${escapeHtml(day.title)}</h3>
+              <ul class="meta-list">
+                <li><b>数学</b><span>${escapeHtml(day.dailyCatalog.mathTopic)}｜${escapeHtml(day.dailyCatalog.mathPoint)}</span></li>
+                <li><b>英语</b><span>${escapeHtml(day.dailyCatalog.englishModule)}</span></li>
+                <li><b>语文</b><span>${escapeHtml(day.dailyCatalog.chineseText)}｜${escapeHtml(day.dailyCatalog.chineseTaskType)}</span></li>
+                <li><b>阶段</b><span>${escapeHtml(day.dailyCatalog.stage)}</span></li>
+              </ul>
+              <div class="tags">${day.dailyCatalog.englishWords.map(word => pill(word, "english")).join("")}</div>
+            </div>
+            <div class="card mood">
+              <h4>${escapeHtml(day.moodCheck.question)}</h4>
+              <div class="tags">${day.moodCheck.options.map(option => pill(option)).join("")}</div>
+              <p>${escapeHtml(day.moodCheck.rule)}</p>
+            </div>
+          </div>
+        </section>
+        ${visibleBySubject("math") ? `
+        <section class="section">
+          <div class="grid two">
+            <div class="card video">
+              <h4>数学视频</h4>
+              <p><b>${escapeHtml(day.mathVideo.platform)}</b>｜${escapeHtml(day.mathVideo.searchKeyword)}</p>
+              <p>观看：${escapeHtml(day.mathVideo.watchTime)}</p>
+              <p>目标：${escapeHtml(day.mathVideo.watchGoal)}</p>
+            </div>
+            <div class="card">
+              <h4>开场热身</h4>
+              <p>${escapeHtml(day.warmup)}</p>
+            </div>
+          </div>
+        </section>` : ""}
+      `;
+    }
+
+    function renderVocab(day) {
+      if (!visibleBySubject("english")) return "";
+      const cards = day.englishVocab.filter(includesSearch).map(word => `
+        <article class="card word">
+          <div class="word-title">
+            <strong>${escapeHtml(word.word)}</strong>
+            <span>${escapeHtml(word.pos)}</span>
+          </div>
+          <p><b>${escapeHtml(word.meaning)}</b></p>
+          <p>${escapeHtml(word.memoryLogic)}</p>
+          <p>${escapeHtml(word.gameScene)}</p>
+          <p><b>例句：</b>${escapeHtml(word.example)}</p>
+        </article>
+      `).join("");
+      return `<section class="section"><h3>英语拆词卡</h3><div class="vocab-grid">${cards || emptyBlock()}</div></section>`;
+    }
+
+    function renderEnglishMission(day, dayId) {
+      const cards = day.english.filter(includesSearch).map((item, index) => `
+        <article class="card question english-card english-task" data-answer="${item.ans}" data-day="${escapeHtml(dayId)}" data-subject="english" data-question-id="${escapeHtml(item.id)}">
+          <p class="question-line">
+            <span class="question-index">${index + 1}.</span>
+            <span><span class="method-tag">${escapeHtml(item.point)}</span> ${escapeHtml(item.q)}</span>
+          </p>
+          <ul class="options">
+            ${item.options.map((option, optionIndex) => `<li><button type="button" class="option-btn" data-index="${optionIndex}">${escapeHtml(option)}</button></li>`).join("")}
+          </ul>
+          <div class="quiz-actions">
+            <button type="button" class="mini-btn hint-btn">看提示</button>
+            <button type="button" class="mini-btn reveal-btn">揭晓答案</button>
+            <button type="button" class="mini-btn reset-btn hidden">重做本题</button>
+            <span class="quiz-status" aria-live="polite">先选一个选项</span>
+          </div>
+          <div class="hint-box hidden">
+            <p><b>提示：</b>${escapeHtml(item.hint)}</p>
+          </div>
+          <div class="feedback hidden">
+            <p><b class="feedback-title">反馈</b><span class="answer"> 答案 ${answerLetter(item.ans)}</span></p>
+            <p><b>解析：</b>${escapeHtml(item.explain)}</p>
+            <p>${escapeHtml(item.encouragement)}</p>
+          </div>
+        </article>
+      `).join("");
+
+      return `
+        <section class="section english-mission-section">
+          <div class="english-mission-head">
+            <span class="mission-icon">A</span>
+            <h3>英语委托（10题）</h3>
+          </div>
+          <p class="english-mission-note">学习法：${escapeHtml(day.dailyCatalog.englishMethod)}。题目按“拆词逻辑、词缀词根、熟词联想、场景记忆、时态感知”设计，不靠硬背硬扛。</p>
+          <div class="english-mission-list">${cards || emptyBlock()}</div>
+        </section>
+      `;
+    }
+
+    function renderQuestions(title, questions, subject, dayId) {
+      const cards = questions.filter(includesSearch).map(item => `
+        <article class="card question ${subject}-card" data-answer="${item.ans}" data-day="${escapeHtml(dayId)}" data-subject="${escapeHtml(subject)}" data-question-id="${escapeHtml(item.id)}">
+          <div class="tags">${pill(item.id, subject)}${pill(item.point, subject)}</div>
+          <p class="q">${escapeHtml(item.q)}</p>
+          <ul class="options">
+            ${item.options.map((option, index) => `<li><button type="button" class="option-btn" data-index="${index}">${escapeHtml(option)}</button></li>`).join("")}
+          </ul>
+          <div class="quiz-actions">
+            <button type="button" class="mini-btn hint-btn">看提示</button>
+            <button type="button" class="mini-btn reveal-btn">揭晓答案</button>
+            <button type="button" class="mini-btn reset-btn hidden">重做本题</button>
+            <span class="quiz-status" aria-live="polite">先选一个选项</span>
+          </div>
+          <div class="hint-box hidden">
+            <p><b>提示：</b>${escapeHtml(item.hint)}</p>
+          </div>
+          <div class="feedback hidden">
+            <p><b class="feedback-title">反馈</b><span class="answer"> 答案 ${answerLetter(item.ans)}</span></p>
+            <p><b>解析：</b>${escapeHtml(item.explain)}</p>
+            <p>${escapeHtml(item.encouragement)}</p>
+          </div>
+        </article>
+      `).join("");
+      return `<section class="section"><h3>${escapeHtml(title)}</h3><div class="qa-grid">${cards || emptyBlock()}</div></section>`;
+    }
+
+    function renderChinese(day) {
+      const item = day.chinese;
+      return `
+        <section class="section">
+          <h3>语文轻量委托</h3>
+          <div class="grid two">
+            <article class="card">
+              <h4>${escapeHtml(item.title)}</h4>
+              <p><b>时间：</b>${escapeHtml(item.time)}</p>
+              <p><b>任务：</b>${escapeHtml(item.mission)}</p>
+              <p><b>格式：</b>${escapeHtml(item.answerFormat)}</p>
+              <p><b>示例：</b>${escapeHtml(item.sampleAnswer)}</p>
+            </article>
+            <article class="card">
+              <h4>目录对应</h4>
+              <p><b>单元：</b>${escapeHtml(item.chineseCatalog.unit)}</p>
+              <p><b>课文：</b>${escapeHtml(item.chineseCatalog.text)}</p>
+              <p><b>体裁：</b>${escapeHtml(item.chineseCatalog.genre)}</p>
+              <p><b>能力：</b>${escapeHtml(item.chineseCatalog.examAbility)}</p>
+              <p><b>家长检查：</b>${escapeHtml(item.parentCheck)}</p>
+              <p><b>奖励：</b>${escapeHtml(item.reward)}</p>
+            </article>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderReview(day) {
+      if (!includesSearch(day.review) && !includesSearch(day.parentGuide) && !includesSearch(day.tracking) && state.search) return "";
+      return `
+        <section class="section">
+          <h3>复盘与家长提示</h3>
+          <div class="grid two">
+            <article class="card">
+              <h4>当天复盘</h4>
+              <p>${escapeHtml(day.review)}</p>
+              <p><b>奖励：</b>${escapeHtml(day.reward)}</p>
+              <p><b>下一天调整：</b>${escapeHtml(day.tracking.nextDayAdjustment)}</p>
+            </article>
+            <article class="card">
+              <h4>家长指南</h4>
+              <p><b>可以说：</b>${escapeHtml(day.parentGuide.doSay)}</p>
+              <p><b>不要说：</b>${escapeHtml(day.parentGuide.dontSay)}</p>
+              <p><b>观察：</b>${escapeHtml(day.parentGuide.observe)}</p>
+            </article>
+          </div>
+        </section>
+      `;
+    }
+
+    function emptyBlock(text = "没有匹配内容") {
+      return `<div class="empty">${escapeHtml(text)}</div>`;
+    }
+
+    function render() {
+      renderTabs();
+      renderStats();
+      if (state.view === "catalog") {
+        renderCatalog();
+      } else if (state.view === "roadmap") {
+        renderRoadmap();
+      } else if (state.view === "wrongbook") {
+        renderWrongBook();
+      } else if (state.view === "share") {
+        renderShareGuide();
+      } else {
+        renderDay(state.view);
+      }
+    }
+
+    function showHint(card) {
+      card.querySelector(".hint-box")?.classList.remove("hidden");
+      const status = card.querySelector(".quiz-status");
+      if (status) status.textContent = "可以先看提示，再慢慢选";
+    }
+
+    function revealQuestion(card, selectedIndex = null) {
+      if (card.classList.contains("answered")) return;
+      const correctIndex = Number(card.dataset.answer);
+      const buttons = [...card.querySelectorAll(".option-btn")];
+      buttons.forEach((button, index) => {
+        button.disabled = true;
+        if (index === correctIndex) button.classList.add("correct");
+        if (index === selectedIndex) button.classList.add("selected");
+        if (selectedIndex !== null && index === selectedIndex && index !== correctIndex) {
+          button.classList.add("wrong");
+        }
+      });
+
+      card.classList.add("answered");
+      card.querySelector(".feedback")?.classList.remove("hidden");
+
+      const title = card.querySelector(".feedback-title");
+      const status = card.querySelector(".quiz-status");
+      card.querySelector(".reset-btn")?.classList.remove("hidden");
+      if (selectedIndex === null) {
+        if (title) title.textContent = "先看答案也可以";
+        if (status) status.textContent = "答案已揭晓";
+      } else if (selectedIndex === correctIndex) {
+        if (title) title.textContent = "答对了";
+        if (status) status.textContent = "答对了，继续下一题";
+      } else {
+        if (title) title.textContent = "这题先记成一次探索";
+        if (status) status.textContent = "看一下解析，再继续就好";
+        recordWrong(card, selectedIndex, correctIndex);
+      }
+    }
+
+    function resetQuestion(card) {
+      card.classList.remove("answered");
+      card.querySelectorAll(".option-btn").forEach(button => {
+        button.disabled = false;
+        button.classList.remove("selected", "correct", "wrong");
+      });
+      card.querySelector(".feedback")?.classList.add("hidden");
+      card.querySelector(".hint-box")?.classList.add("hidden");
+      card.querySelector(".reset-btn")?.classList.add("hidden");
+      const status = card.querySelector(".quiz-status");
+      if (status) status.textContent = "先选一个选项";
+    }
+
+    tabsEl.addEventListener("click", event => {
+      const button = event.target.closest("button[data-view]");
+      if (!button) return;
+      state.view = button.dataset.view;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    subjectFilterEl.addEventListener("click", event => {
+      const button = event.target.closest("button[data-subject]");
+      if (!button) return;
+      state.subject = button.dataset.subject;
+      subjectFilterEl.querySelectorAll("button").forEach(item => {
+        item.setAttribute("aria-pressed", String(item === button));
+      });
+      render();
+    });
+
+    searchEl.addEventListener("input", event => {
+      state.search = event.target.value;
+      render();
+    });
+
+    contentEl.addEventListener("click", event => {
+      const optionButton = event.target.closest(".option-btn");
+      if (optionButton) {
+        const card = optionButton.closest(".question");
+        revealQuestion(card, Number(optionButton.dataset.index));
+        return;
+      }
+
+      const hintButton = event.target.closest(".hint-btn");
+      if (hintButton) {
+        showHint(hintButton.closest(".question"));
+        return;
+      }
+
+      const revealButton = event.target.closest(".reveal-btn");
+      if (revealButton) {
+        revealQuestion(revealButton.closest(".question"));
+        return;
+      }
+
+      const resetButton = event.target.closest(".reset-btn");
+      if (resetButton) {
+        resetQuestion(resetButton.closest(".question"));
+        return;
+      }
+
+      const removeWrongButton = event.target.closest(".remove-wrong-btn");
+      if (removeWrongButton) {
+        removeWrong(removeWrongButton.dataset.key);
+        return;
+      }
+
+      const clearWrongButton = event.target.closest(".clear-wrongbook-btn");
+      if (clearWrongButton) {
+        clearWrongBook();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
