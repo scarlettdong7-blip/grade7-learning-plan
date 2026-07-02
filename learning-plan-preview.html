@@ -391,6 +391,35 @@
       min-height: 180px;
     }
 
+    .word-plan {
+      background: linear-gradient(135deg, #f8fbff, #fff8ec);
+    }
+
+    .word-plan-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .review-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .review-row {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .review-row b {
+      display: block;
+      margin-bottom: 6px;
+      color: #263653;
+      font-size: 13px;
+    }
+
     .word-title {
       display: flex;
       gap: 8px;
@@ -694,6 +723,15 @@
     .fill-card {
       display: grid;
       gap: 12px;
+    }
+
+    .chinese-question-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .chinese-question {
+      border-left: 4px solid var(--chinese);
     }
 
     .fill-prompt {
@@ -1018,7 +1056,8 @@
       .roadmap-subjects,
       .roadmap-day,
       .day-head,
-      .schulte-wrap {
+      .schulte-wrap,
+      .word-plan-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1090,16 +1129,6 @@
       <div class="topbar">
         <h2 id="pageTitle">Coverage Catalog</h2>
         <p id="pageIntro"></p>
-      </div>
-
-      <div class="toolbar">
-        <div class="segmented" id="subjectFilter" aria-label="科目筛选">
-          <button type="button" data-subject="all" aria-pressed="true">全部</button>
-          <button type="button" data-subject="math" aria-pressed="false">数学</button>
-          <button type="button" data-subject="english" aria-pressed="false">英语</button>
-          <button type="button" data-subject="chinese" aria-pressed="false">语文</button>
-        </div>
-        <input class="search" id="searchInput" type="search" placeholder="搜索单词、知识点或题干">
       </div>
 
       <div id="content" class="panel"></div>
@@ -1365,6 +1394,19 @@
   <script>
     const DATA = JSON.parse(document.getElementById("plan-data").textContent);
     const BILIBILI_MATH_VIDEO_URL = "https://www.bilibili.com/video/BV1qb411A7Zz/?spm_id_from=333.1387.homepage.video_card.click";
+    const WORD_BANK_666 = `ability able above abroad absent accept accident achieve achievement act active actual actually add addition address admire advantage advice advise affect afford afraid against agree agreement aim allow almost alone along already although amazing among amount answer anxiety anything appear appearance apply area argue argument ashamed attached attend attention attitude attract attraction avoid awful back balance base basic bear beat begin behave behavior belief beneficial benefit beyond blame blind blow born brain brave break breathe bright bring build building calm camera camp can cancel care career careful carry case catch cause celebrate celebration certain certainly challenge chance change character cheat check cheer choice choose close collect college comfort comment common communication company compare compete competition complain complete condition confidence confident confuse connect connection consider continue control conversation cooperate correct cost count courage course cover crazy create creative criticize cross crowded cry cultural culture curious damage dangerous deal death decide deep degree delicious depend depress describe design destroy detail develop development dialogue different difficult difficulty direct direction disadvantage disappoint disappointed discover discuss discussion disease disorder distance divide doubt draw dream drop during eager education effect effort emotion emotional encourage end enemy energetic energy enjoy enough enter environment especially even event exact examination example excellent except excite exciting excuse executive exercise expect experience experiment expert explain explanation explore express facial fail failure fair fall Familiar famous fantastic fear fearless feed feel feeling festival field fight fill final fit focus follow force forget forgive form friendly frighten frightened full funny general gift goal government gradually guilty habit hall hand happen hard hardly harm harmful head healthy heat hide hit hold honest honor hope however huge humor humorous hundred hunt hurricane hurry hurt idea imagine immediately important impossible impression improve include incorrect increase indicate infer influence information injury inside insist instead instruct instruction interest interesting international interview introduce introduction invention invite involve jogging join judge just keep key knowledge lack land last laugh law leader least leave lecture less lesson level life lift light likely limit listen live lonely long lose low lucky magic main make manage mark market marry match material matter mean meaning measure medical member memory mention method mind miss mobile modern moment mountain move national native natural nature nearly necessary negative neither nervous news noise normal note notice object observe obvious occasional offer once operation opinion opportunity opposite order ordinary organize outside overcome owner pain paint park part pass past patient pay peace peaceful percent perfect perform perhaps period personal physical physically pick pity place plan plant pleasant pleasure plenty point polite pollution poor popular position positive possible powerful practice praise prefer prepare present president pressure prevent price print private prize probably problem process produce product production program progress project promise proper protect protection proud prove provide public pull punish purpose push quiet quite race raise rather reach ready realize reason receive recently recite recognize record reduce refer refuse regard regret regular relation relationship relaxation relaxed remain remind repair repeat reply report require requirement research researcher respect respond responsibility responsible rest result return review reward right risk role rule rush safety satisfaction satisfied satisfy save scared science scientific scientist score screen second secret seem sense sensitive sentence separate serious service set several shape share shoot shout show shut sick silence silent similar simple since situation slow smart smell social society solution solve sound source space special specific speed spend spirit splendid spread square stand state stay steal step stick still stop straight strange stranger strength stress stressful strict study style subject success successful sudden suddenly suffer suggest support suppose surprise surprised surprising survey system talent task taste tear technology temperature tend terrible though thread throw tiredness title touch tour tourist toward(s) trade traditional training translate transportation travel treat trip trouble true trust truth try unique united university unkind unless until unusual use used useful valuable value view violence visit volunteer wait warm warning waste watch water wealth wear weather weigh weight whatever whether while whole wide win wise without wonder wonderful worldwide worry worth wrong yet`.trim().split(/\s+/);
+    const WORDS_PER_DAY = 15;
+    const REVIEW_OFFSETS = [1, 2, 4, 7, 15, 30];
+    const SUBMIT_ENCOURAGEMENTS = [
+      "今天已经点亮了一小段路，慢慢来也是在前进。",
+      "完成比完美更重要，今天这一页已经很不错了。",
+      "你不是在补一座山，你是在每天搬走一小块石头。",
+      "今天的大脑完成了一次热身，明天会更容易开始。",
+      "错题只是路标，不是失败。看到它，就知道下一步怎么走。",
+      "这一轮先把路走熟，分数会在后面的复盘里慢慢长出来。",
+      "能坐下来完成，就是很真实的进步。",
+      "今天不需要证明自己，只需要把任务交上来。你做到了。"
+    ];
     const state = {
       view: "catalog",
       subject: "all",
@@ -1376,6 +1418,330 @@
     let wrongBook = loadWrongBook();
     let dailySubmissions = loadDailySubmissions();
     let schulteTimer = null;
+
+    applyQuestionUpgrades();
+    applySourceBasedDayRegeneration();
+
+    function applyQuestionUpgrades() {
+      const upgrades = {
+        "1": {
+          math: [
+            {"id":"m1_1","point":"多次变化","q":"星尘坐标先是 -3，依次变化 +5、-8、+2，最后坐标是？","options":["A. -4","B. +4","C. -14"],"ans":0,"hint":"按顺序一步一步算。","explain":"-3+5=2，2-8=-6，-6+2=-4。","encouragement":"这已经是多步正负变化了。"},
+            {"id":"m1_2","point":"反推变化","q":"风灯最后比开始亮了 +4 格，已知第一次暗下 -3 格，第二次应变化多少？","options":["A. +7","B. +1","C. -7"],"ans":0,"hint":"-3 加多少等于 +4？","explain":"设第二次变化为 x，-3+x=+4，所以 x=+7。","encouragement":"会反推，比只算变化更进一步。"},
+            {"id":"m1_3","point":"跨0变化","q":"光桥刻度从 +6 变到 -2，变化量是？","options":["A. -8","B. +8","C. -4"],"ans":0,"hint":"从 +6 到0要减少6，再到 -2还要减少2。","explain":"-2-(+6)=-8，表示整体减少8。","encouragement":"跨过0也能判断方向。"},
+            {"id":"m1_4","point":"正负数应用","q":"以地面为0，先到地下3层，再上升5层，最后在？","options":["A. +2层","B. -8层","C. -2层"],"ans":0,"hint":"地下3层是 -3，上升5是 +5。","explain":"-3+5=+2，所以最后在地上2层。","encouragement":"场景和算式连起来了。"},
+            {"id":"m1_5","point":"净变化比较","q":"A星灯变化 +4、-9；B星灯变化 -2、-1。谁最后更亮？","options":["A. B星灯","B. A星灯","C. 一样亮"],"ans":0,"hint":"先分别算净变化。","explain":"A净变化 -5，B净变化 -3，-3 比 -5 大，所以B更亮。","encouragement":"开始能比较两个变化结果了。"},
+            {"id":"m1_6","point":"符号判断","q":"某次探索总变化为0，下面哪组可能成立？","options":["A. +6、-2、-4","B. -6、-2、+4","C. +6、+2、-4"],"ans":0,"hint":"三个数加起来要等于0。","explain":"+6-2-4=0，另外两组都不是0。","encouragement":"0是平衡，不是没有内容。"},
+            {"id":"m1_7","point":"连续消耗","q":"星图亮度从 -1 开始，连续暗下3格，再亮起5格，最后是？","options":["A. +1","B. -9","C. -3"],"ans":0,"hint":"暗下3格是 -3，亮起5格是 +5。","explain":"-1-3+5=+1。","encouragement":"连续变化也能稳住。"},
+            {"id":"m1_8","point":"变化量选择","q":"哪句话能用 -6 表示？","options":["A. 星尘比原来少6枚","B. 星尘一共有6枚","C. 星尘比原来多6枚"],"ans":0,"hint":"负号表示减少方向。","explain":"-6表示减少6，不表示总数就是6。","encouragement":"你分清了“变化”和“总量”。"},
+            {"id":"m1_9","point":"反推起点","q":"某坐标变化 +7 后变成 +2，原来是？","options":["A. -5","B. +9","C. +5"],"ans":0,"hint":"从结果反退7格。","explain":"+2-7=-5，所以原来是 -5。","encouragement":"反推题开始有方程味道了。"},
+            {"id":"m1_10","point":"综合判断","q":"先 +3，再 -10，再 +4，整体变化和下面哪个一样？","options":["A. -3","B. +17","C. -11"],"ans":0,"hint":"把增加和减少分别合起来。","explain":"+3+4=+7，+7-10=-3。","encouragement":"Day 1 挑战版完成。"}
+          ],
+          english: [
+            {"id":"e1_1","point":"【句子功能】","q":"'Hello, class. This is my teacher.' 这两句主要完成什么功能？","options":["A. 问候并介绍人物","B. 询问颜色和数字","C. 描述过去发生的事"],"ans":0,"hint":"hello 问候，This is... 介绍。","explain":"hello 用来问候，This is my teacher 用来介绍人物。","encouragement":"你开始看句子功能了。"},
+            {"id":"e1_2","point":"【后缀迁移】","q":"teacher = teach + -er。按同样逻辑，player 最可能表示？","options":["A. 玩/比赛的人","B. 完全不玩","C. 一次又一次玩"],"ans":0,"hint":"-er 常表示做动作的人。","explain":"play 是玩或比赛，player 是做这个动作的人。","encouragement":"能把拆词法迁移到新词。"},
+            {"id":"e1_3","point":"【词义排除】","q":"看到 'Nice to meet you.'，不能把 meet 理解成？","options":["A. 地图","B. 遇见","C. 见到"],"ans":0,"hint":"meet 是动作，不是物品。","explain":"meet 表示遇见、见到；map 才是地图。","encouragement":"排除法也很好用。"},
+            {"id":"e1_4","point":"【句块识别】","q":"'My name is Ling.' 里真正介绍的信息是？","options":["A. Ling 这个名字","B. teacher 这个职业","C. class 这个班级"],"ans":0,"hint":"name 后面跟名字。","explain":"My name is... 是介绍名字的句块，Ling 是名字。","encouragement":"抓句块比逐字翻译更稳。"},
+            {"id":"e1_5","point":"【确认/否定】","q":"别人问 'Are you Ling?'，回答 'No.' 表示？","options":["A. 不是","B. 是的","C. 很高兴见你"],"ans":0,"hint":"No 是否定。","explain":"No 表示否定，不是对方说的情况。","encouragement":"小词功能抓住了。"},
+            {"id":"e1_6","point":"【代词感知】","q":"'This is my friend.' 里的 my 表示？","options":["A. 我的","B. 你的","C. 他的"],"ans":0,"hint":"my name 也是“我的名字”。","explain":"my 是“我的”，放在名词前说明归属。","encouragement":"开始接触所有格了。"},
+            {"id":"e1_7","point":"【场景选择】","q":"如果要介绍一位同行伙伴，最自然的句子是？","options":["A. This is my friend.","B. No, thanks.","C. Open your book."],"ans":0,"hint":"介绍人用 This is...","explain":"This is my friend. 表示“这是我的朋友”。","encouragement":"会选合适场景的句子。"},
+            {"id":"e1_8","point":"【词类判断】","q":"teacher、friend、class 这三个词共同点更接近？","options":["A. 多数是名词","B. 都是否定词","C. 都表示颜色"],"ans":0,"hint":"它们都能指人或群体。","explain":"teacher、friend、class 都可作名词。","encouragement":"词类意识开始建立。"},
+            {"id":"e1_9","point":"【短句拼图】","q":"把“我的老师”放进 This is...，正确表达是？","options":["A. This is my teacher.","B. This my is teacher.","C. Teacher my this is."],"ans":0,"hint":"This is + my + 名词。","explain":"This is my teacher. 语序正确。","encouragement":"句子拼图成功。"},
+            {"id":"e1_10","point":"【综合理解】","q":"'Hello, my friend. Nice to meet you.' 这句话更适合什么时候说？","options":["A. 第一次见到朋友时","B. 描述一本蓝书时","C. 计算坐标时"],"ans":0,"hint":"Nice to meet you 是见面表达。","explain":"这句话用于见面问候，不是描述物品。","encouragement":"Day 1 英语挑战版完成。"}
+          ]
+        },
+        "2": {
+          math: [
+            {"id":"m2_1","point":"数轴移动","q":"从 -4 出发，先向右7格，再向左2格，最后到？","options":["A. +1","B. -9","C. +5"],"ans":0,"hint":"先 -4+7，再 -2。","explain":"-4+7=+3，+3-2=+1。","encouragement":"两次移动也能稳。"},
+            {"id":"m2_2","point":"跨0距离","q":"星匣在 -5，风铃在 +4，相距几格？","options":["A. 9格","B. 1格","C. 5格"],"ans":0,"hint":"从 -5 到0有5格，再到 +4有4格。","explain":"5+4=9。","encouragement":"跨0距离掌握了。"},
+            {"id":"m2_3","point":"中点判断","q":"-4 和 +6 的正中间是？","options":["A. +1","B. -1","C. +2"],"ans":0,"hint":"两个数相加再除以2。","explain":"(-4+6)/2=1，所以中点是 +1。","encouragement":"这是更高一级的数轴题。"},
+            {"id":"m2_4","point":"反推移动","q":"向左走6格后到 -2，起点是？","options":["A. +4","B. -8","C. -4"],"ans":0,"hint":"反过来向右走6格。","explain":"-2+6=+4。","encouragement":"反推移动完成。"},
+            {"id":"m2_5","point":"大小排序","q":"从小到大排列：-2、+3、-5、0，正确是？","options":["A. -5，-2，0，+3","B. 0，-2，+3，-5","C. +3，0，-2，-5"],"ans":0,"hint":"越靠左越小。","explain":"数轴从左到右是 -5，-2，0，+3。","encouragement":"排序更完整了。"},
+            {"id":"m2_6","point":"距离比较","q":"谁离 +1 更近？","options":["A. -1","B. +5","C. -4"],"ans":0,"hint":"分别算到 +1 的距离。","explain":"-1到+1距离2，+5距离4，-4距离5，所以 -1 最近。","encouragement":"不是只看离0，也会看离指定点。"},
+            {"id":"m2_7","point":"方向判断","q":"从 -3 到 +2，需要怎么走？","options":["A. 向右5格","B. 向左5格","C. 向右1格"],"ans":0,"hint":"从负数到正数通常向右。","explain":"-3 到0是3格，0到+2是2格，共向右5格。","encouragement":"方向和距离一起判断。"},
+            {"id":"m2_8","point":"坐标综合","q":"从 +2 出发，移动后到 -5，本次变化量是？","options":["A. -7","B. +7","C. -3"],"ans":0,"hint":"终点减起点。","explain":"-5-(+2)=-7。","encouragement":"会用终点减起点。"},
+            {"id":"m2_9","point":"数轴对称","q":"点A在 -6，点B与A关于0对称。B再向左2格到？","options":["A. +4","B. -8","C. +8"],"ans":0,"hint":"先找对称点 +6。","explain":"-6 关于0对称是 +6，向左2格到 +4。","encouragement":"两步数轴题完成。"},
+            {"id":"m2_10","point":"综合判断","q":"哪组点之间距离最大？","options":["A. -4 和 +3","B. -1 和 +2","C. +3 和 +5"],"ans":0,"hint":"分别算距离。","explain":"-4到+3距离7，-1到+2距离3，+3到+5距离2。","encouragement":"Day 2 数轴挑战版完成。"}
+          ],
+          english: [
+            {"id":"e2_1","point":"【指令理解】","q":"老师说 'Open your book and listen.'，需要先做什么？","options":["A. 打开书并听","B. 写名字","C. 介绍朋友"],"ans":0,"hint":"open 打开，listen 听。","explain":"这句话包含两个课堂动作：open 和 listen。","encouragement":"能读懂双动作指令。"},
+            {"id":"e2_2","point":"【祈使句】","q":"'Listen to the teacher.' 省略了哪个主语？","options":["A. you","B. he","C. it"],"ans":0,"hint":"祈使句常省略 you。","explain":"课堂指令通常默认对“你/你们”说。","encouragement":"语法感开始出现。"},
+            {"id":"e2_3","point":"【词块判断】","q":"'English lesson' 中哪个词是核心名词？","options":["A. lesson","B. English","C. open"],"ans":0,"hint":"English 修饰 lesson。","explain":"lesson 是核心，English 说明是哪种课。","encouragement":"会看词组主干。"},
+            {"id":"e2_4","point":"【句子选择】","q":"想让对方打开书，最合适的是？","options":["A. Open your book.","B. This is my book.","C. My name is book."],"ans":0,"hint":"动词开头是指令。","explain":"Open your book. 是打开书的课堂指令。","encouragement":"能区分介绍句和指令句。"},
+            {"id":"e2_5","point":"【词缀迁移】","q":"reopen = re- + open，re- 最可能让动作发生几次？","options":["A. 再一次","B. 完全不","C. 变成蓝色"],"ans":0,"hint":"re- 有重新、再次的感觉。","explain":"reopen 是重新打开。","encouragement":"前缀成工具了。"},
+            {"id":"e2_6","point":"【听写场景】","q":"How do you spell 'pen'? 这句话在问什么？","options":["A. pen 怎么拼写","B. pen 是谁的","C. pen 有几支"],"ans":0,"hint":"spell 是拼写。","explain":"How do you spell...? 用来问单词拼写。","encouragement":"开始接近课本真实问法。"},
+            {"id":"e2_7","point":"【分类判断】","q":"book、pen、pencil 更适合归为哪一类？","options":["A. classroom things","B. family members","C. colours"],"ans":0,"hint":"它们都是课堂物品。","explain":"book、pen、pencil 都是学习用品。","encouragement":"分类记忆更稳。"},
+            {"id":"e2_8","point":"【动作对象】","q":"'Open your book.' 中动作对象是？","options":["A. your book","B. open","C. teacher"],"ans":0,"hint":"打开什么？","explain":"open 是动作，your book 是动作对象。","encouragement":"句子结构更清楚。"},
+            {"id":"e2_9","point":"【句序判断】","q":"下面哪句语序正确？","options":["A. Listen to the teacher.","B. To listen teacher the.","C. Teacher listen to the."],"ans":0,"hint":"listen to + 人。","explain":"listen 常和 to 连用，Listen to the teacher. 语序正确。","encouragement":"固定搭配抓住了。"},
+            {"id":"e2_10","point":"【综合理解】","q":"课堂开始时，老师最可能连续说哪组？","options":["A. Hello, class. Open your books.","B. Five stars are blue.","C. My map is red."],"ans":0,"hint":"先问候，再发课堂指令。","explain":"Hello, class. 是问候，Open your books. 是课堂指令。","encouragement":"Day 2 英语挑战版完成。"}
+          ]
+        },
+        "3": {
+          math: [
+            {"id":"m3_1","point":"绝对值运算","q":"-| -6 | + |+2| 的结果是？","options":["A. -4","B. +8","C. +4"],"ans":0,"hint":"先算绝对值，再看前面的负号。","explain":"|-6|=6，所以 -|-6|=-6；|+2|=2，结果 -6+2=-4。","encouragement":"能处理绝对值外面的负号了。"},
+            {"id":"m3_2","point":"条件判断","q":"|x|=5，且 x 在0左边，那么 x 是？","options":["A. -5","B. +5","C. 0"],"ans":0,"hint":"左边是负方向。","explain":"离0有5格的数有 +5 和 -5，在左边只能是 -5。","encouragement":"绝对值反推加条件，完成。"},
+            {"id":"m3_3","point":"距离比较","q":"A在 -4，B在 +1，C在 +3。谁离A更近？","options":["A. B","B. C","C. 一样近"],"ans":0,"hint":"分别算到 -4 的距离。","explain":"B到A距离5，C到A距离7，所以B更近。","encouragement":"能以任意点为参照了。"},
+            {"id":"m3_4","point":"相反数综合","q":"-3 的相反数与 |-2| 的和是？","options":["A. 5","B. 1","C. -5"],"ans":0,"hint":"先求相反数，再求绝对值。","explain":"-3的相反数是 +3，|-2|=2，3+2=5。","encouragement":"两种概念能合在一起算。"},
+            {"id":"m3_5","point":"绝对值比较","q":"下面哪个数离0最远？","options":["A. -7","B. +5","C. -3"],"ans":0,"hint":"比较绝对值大小。","explain":"|-7|=7，|+5|=5，|-3|=3，所以 -7 最远。","encouragement":"会用绝对值比较远近。"},
+            {"id":"m3_6","point":"数轴距离","q":"两个点的坐标是 -6 和 +2，它们之间的距离是？","options":["A. 8","B. 4","C. -8"],"ans":0,"hint":"距离不带负号。","explain":"从 -6 到0是6格，从0到+2是2格，共8格。","encouragement":"距离不受方向影响。"},
+            {"id":"m3_7","point":"绝对值方程感知","q":"如果 |x|=3，下列哪组都可能是 x？","options":["A. -3 和 +3","B. 0 和 +3","C. -3 和 0"],"ans":0,"hint":"离0三格有左右两个点。","explain":"x 可以是 -3 或 +3。","encouragement":"这就是后面方程的影子。"},
+            {"id":"m3_8","point":"符号陷阱","q":"下面哪句话正确？","options":["A. -|+4|=-4","B. -|+4|=+4","C. |-4|=-4"],"ans":0,"hint":"绝对值先变成距离，再看外面的负号。","explain":"|+4|=4，前面有负号，所以 -|+4|=-4。","encouragement":"能避开常见陷阱。"},
+            {"id":"m3_9","point":"综合移动","q":"从 |-5| 的位置向左走7格，到达？","options":["A. -2","B. +12","C. -12"],"ans":0,"hint":"|-5| 先等于5。","explain":"|-5|=5，从 +5 向左7格到 -2。","encouragement":"先化简再移动，顺序对了。"},
+            {"id":"m3_10","point":"综合判断","q":"若一个数的相反数是 +4，这个数的绝对值是？","options":["A. 4","B. -4","C. 0"],"ans":0,"hint":"相反数是 +4，原数是 -4。","explain":"原数是 -4，|-4|=4。","encouragement":"Day 3 数学挑战版完成。"}
+          ],
+          english: [
+            {"id":"e3_1","point":"【词组主干】","q":"'blue book' 和 'red lantern' 的共同结构是？","options":["A. 颜色 + 物品","B. 数字 + 动作","C. 否定 + 名字"],"ans":0,"hint":"blue/red 都是颜色。","explain":"颜色词放在名词前面，给物品加颜色信息。","encouragement":"能看词组结构了。"},
+            {"id":"e3_2","point":"【前缀推义】","q":"unhappy = un- + happy，最接近？","options":["A. not happy","B. happy again","C. very happy"],"ans":0,"hint":"un- 是否定。","explain":"un- 常表示不、否定，所以 unhappy 是不开心。","encouragement":"能用英语解释英语了。"},
+            {"id":"e3_3","point":"【前缀对比】","q":"dislike 和 unhappy 的共同点是？","options":["A. 都有否定/相反意思","B. 都表示重新","C. 都表示颜色"],"ans":0,"hint":"dis- 和 un- 都能带出否定感。","explain":"dislike 是不喜欢，unhappy 是不开心。","encouragement":"开始比较词缀功能。"},
+            {"id":"e3_4","point":"【句子主干】","q":"'My bag is blue.' 的主干更接近？","options":["A. bag is blue","B. my is bag","C. blue my bag"],"ans":0,"hint":"谁怎么样？","explain":"核心是 bag is blue，my 说明“我的”。","encouragement":"句子主干抓得住。"},
+            {"id":"e3_5","point":"【时间词提示】","q":"'I open the map every day.' 里 every day 通常提示？","options":["A. 经常/习惯","B. 正在此刻","C. 只发生在过去"],"ans":0,"hint":"every day 是每天。","explain":"每天发生，通常是习惯动作。","encouragement":"时态先抓时间词，很稳。"},
+            {"id":"e3_6","point":"【词根线索】","q":"number、numeral、numeric 都容易让人想到？","options":["A. 数字","B. 颜色","C. 天气"],"ans":0,"hint":"num/numer 和数字有关。","explain":"num/numer 是常见数字线索。","encouragement":"词根线索开始发挥作用。"},
+            {"id":"e3_7","point":"【场景判断】","q":"Open the map. 这句话里真正的动作是？","options":["A. open","B. map","C. the"],"ans":0,"hint":"动作通常是动词。","explain":"open 是动词，map 是动作对象。","encouragement":"句子成分更清楚。"},
+            {"id":"e3_8","point":"【词类综合】","q":"red、blue 最常在名词前面充当什么？","options":["A. 描述颜色的形容词","B. 表示动作的动词","C. 表示人的名词"],"ans":0,"hint":"red bag，blue book。","explain":"red、blue 可以作形容词修饰名词。","encouragement":"词类和位置连起来了。"},
+            {"id":"e3_9","point":"【句子改错】","q":"哪一句语序正确？","options":["A. My bag is blue.","B. Bag my blue is.","C. Blue is my bag every."],"ans":0,"hint":"My + 名词 + is + 颜色。","explain":"My bag is blue. 语序自然正确。","encouragement":"能排除乱序句。"},
+            {"id":"e3_10","point":"【综合理解】","q":"看到 'a blue bag'，最该先确定的是？","options":["A. bag 是核心物品","B. blue 是动作","C. a 表示很多"],"ans":0,"hint":"颜色修饰物品。","explain":"核心名词是 bag，blue 给它加颜色。","encouragement":"Day 3 英语挑战版完成。"}
+          ]
+        },
+        "4": {
+          math: [
+            {"id":"m4_1","point":"绝对值混合","q":"|-8| - |+3| + (-2) = ?","options":["A. 3","B. 7","C. -13"],"ans":0,"hint":"先算绝对值。","explain":"|-8|=8，|+3|=3，8-3-2=3。","encouragement":"三步混合也能拆。"},
+            {"id":"m4_2","point":"相反数综合","q":"-(-4) + |-6| 的结果是？","options":["A. 10","B. 2","C. -10"],"ans":0,"hint":"-(-4)=+4。","explain":"-(-4)=4，|-6|=6，所以4+6=10。","encouragement":"双重负号也不慌。"},
+            {"id":"m4_3","point":"条件筛选","q":"|x|=5，且 x+2<0，x 是？","options":["A. -5","B. +5","C. 0"],"ans":0,"hint":"x+2<0 说明 x 小于 -2。","explain":"|x|=5 时 x 为 ±5，只有 -5 满足 x+2<0。","encouragement":"开始用条件筛答案了。"},
+            {"id":"m4_4","point":"距离应用","q":"A点在 -3，B点在 +5，若C是AB中点，C在？","options":["A. +1","B. -1","C. +2"],"ans":0,"hint":"中点是两个坐标平均数。","explain":"(-3+5)/2=1，所以C在 +1。","encouragement":"数轴中点题完成。"},
+            {"id":"m4_5","point":"综合判断","q":"下面哪个式子的结果最小？","options":["A. -|+4|","B. |-5|","C. -(-3)"],"ans":0,"hint":"先算每个结果。","explain":"-|+4|=-4，|-5|=5，-(-3)=3，最小是 -4。","encouragement":"比较前先化简。"},
+            {"id":"m4_6","point":"反推变化","q":"从某点向右8格到 +3，原点是？","options":["A. -5","B. +11","C. -11"],"ans":0,"hint":"从 +3 反向左退8格。","explain":"+3-8=-5。","encouragement":"反推移动更熟了。"},
+            {"id":"m4_7","point":"绝对值方程感","q":"如果 |x|=| -7 |，x 不可能是？","options":["A. 0","B. +7","C. -7"],"ans":0,"hint":"|-7|=7。","explain":"|x|=7，所以x可能是+7或-7，不可能是0。","encouragement":"会从绝对值推出可能值。"},
+            {"id":"m4_8","point":"数轴距离","q":"与 -2 距离为5的点可能是？","options":["A. +3或-7","B. 只能+3","C. 只能-7"],"ans":0,"hint":"在 -2 左右各5格。","explain":"-2+5=+3，-2-5=-7。","encouragement":"这题很接近后面的方程思想。"},
+            {"id":"m4_9","point":"符号综合","q":"|-3| 的相反数是？","options":["A. -3","B. +3","C. 0"],"ans":0,"hint":"先算绝对值，再取相反数。","explain":"|-3|=3，3的相反数是 -3。","encouragement":"顺序判断准确。"},
+            {"id":"m4_10","point":"综合通关","q":"从 -1 出发，先到它的相反数，再向左4格，最后是？","options":["A. -3","B. +5","C. -5"],"ans":0,"hint":"-1的相反数是+1。","explain":"先到+1，再向左4格：+1-4=-3。","encouragement":"Day 4 数学挑战版完成。"}
+          ],
+          english: [
+            {"id":"e4_1","point":"【复数判断】","q":"'five stars' 中 stars 为什么加 s？","options":["A. five 表示不止一个","B. star 是动词","C. s 表示否定"],"ans":0,"hint":"数量大于1。","explain":"five 是五，名词 star 要用复数 stars。","encouragement":"复数信号抓住了。"},
+            {"id":"e4_2","point":"【主干识别】","q":"'two blue books' 的核心名词是？","options":["A. books","B. blue","C. two"],"ans":0,"hint":"数量和颜色都修饰物品。","explain":"books 是核心名词，two 表数量，blue 表颜色。","encouragement":"复杂词组也能抓核心。"},
+            {"id":"e4_3","point":"【词缀复习】","q":"reopen、rewrite、reread 里的 re- 共同表示？","options":["A. 再次/重新","B. 不/否定","C. 颜色"],"ans":0,"hint":"reopen 是重新打开。","explain":"re- 常表示再一次、重新。","encouragement":"能归纳一组词缀。"},
+            {"id":"e4_4","point":"【时间词】","q":"every day、often、usually 都更容易提示？","options":["A. 一般现在时/习惯","B. 现在进行时","C. 一般过去时"],"ans":0,"hint":"它们都表示经常。","explain":"经常发生的动作常用一般现在时。","encouragement":"时态线索变多了。"},
+            {"id":"e4_5","point":"【词组顺序】","q":"“三张红色地图”更自然的英文顺序是？","options":["A. three red maps","B. red three maps","C. maps red three"],"ans":0,"hint":"数量 + 颜色 + 名词。","explain":"three 表数量，red 表颜色，maps 是名词。","encouragement":"词组排序完成。"},
+            {"id":"e4_6","point":"【句型判断】","q":"'I play every day.' 不是在说？","options":["A. 我此刻正在玩","B. 我每天玩","C. 一个习惯动作"],"ans":0,"hint":"every day 不是 right now。","explain":"every day 表示习惯，不表示此刻正在发生。","encouragement":"能区分习惯和正在发生。"},
+            {"id":"e4_7","point":"【复数改错】","q":"哪一句更正确？","options":["A. I have two pens.","B. I have two pen.","C. I has two pens."],"ans":0,"hint":"two 后面名词用复数。","explain":"two pens 正确；I have 也正确。","encouragement":"词形和动词都顾到了。"},
+            {"id":"e4_8","point":"【颜色修饰】","q":"'blue book' 变成复数时，正确是？","options":["A. blue books","B. blues book","C. blue bookes"],"ans":0,"hint":"颜色词不加s，名词加s。","explain":"blue 修饰 books，book 的复数是 books。","encouragement":"复数位置判断准确。"},
+            {"id":"e4_9","point":"【句子拼图】","q":"下面哪句能表达“我每天读书”？","options":["A. I read books every day.","B. Every read I books day.","C. I reading books every day."],"ans":0,"hint":"主语 + 动词 + 宾语 + 时间。","explain":"I read books every day. 是正确顺序。","encouragement":"句子拼图升级成功。"},
+            {"id":"e4_10","point":"【综合理解】","q":"'I reopen my book and read every day.' 这句包含哪些线索？","options":["A. re- 和 every day","B. only blue","C. 过去时间"],"ans":0,"hint":"reopen 有 re-，every day 是时间线索。","explain":"reopen 可拆 re- + open，every day 提示习惯动作。","encouragement":"Day 4 英语挑战版完成。"}
+          ]
+        }
+      };
+
+      Object.entries(upgrades).forEach(([dayId, upgrade]) => {
+        if (!DATA.days[dayId]) return;
+        if (upgrade.math) DATA.days[dayId].math = upgrade.math;
+        if (upgrade.english) DATA.days[dayId].english = upgrade.english;
+      });
+    }
+
+    function applySourceBasedDayRegeneration() {
+      const firstMathChapter = DATA.coverageCatalog.math.find(item => item.chapter.includes("有理数"));
+      if (firstMathChapter) {
+        firstMathChapter.chapter = "第1章 有理数及其运算";
+        firstMathChapter.unitGoal = "按《初中高频易错500题 七年级数学》的目录顺序，从易错母题进入知识点";
+        firstMathChapter.sections = [
+          {"code": "1.1", "title": "认识有理数", "points": ["有理数的两套分类标准", "带负号的数不一定是负数", "数轴上的大小关系", "相反数与倒数的区别", "绝对值与数轴距离"]},
+          {"code": "1.2", "title": "有理数加减", "points": ["同号异号加法", "减法转化为加法", "加减混合中的符号处理"]},
+          {"code": "1.3", "title": "有理数乘除", "points": ["乘除符号法则", "倒数", "乘除混合运算"]},
+          {"code": "1.4", "title": "有理数乘方", "points": ["乘方意义", "底数指数", "幂的符号", "有理数混合运算"]}
+        ];
+      }
+
+      const regenerated = {
+        "1": {
+          title: "易错星图 1：有理数分类与符号陷阱",
+          dailyCatalog: {
+            mathChapter: "《易错500题》第1章 1.1 认识有理数",
+            mathTopic: "《易错500题》1.1 有理数分类",
+            mathPoint: "区分“按定义分类”和“按性质分类”，识别带负号的数不一定是负数",
+            englishModule: "中考666词 Day 1",
+            englishWords: WORD_BANK_666.slice(0, 15),
+            englishMethod: "词族联想：able/ability，achieve/achievement，add/addition",
+            chineseUnit: "七年级上册 第一单元",
+            chineseText: "春",
+            chineseTaskType: "写景散文：画面与氛围填空",
+            review: "英语666词前15个；数学对应《易错500题》1.1母题1和避坑清单",
+            stage: "第1-4天：按课本目录顺序，用易错母题启动"
+          },
+          mathVideo: {"platform": "B站", "searchKeyword": "数学微课帮 七年级 有理数分类 认识有理数", "watchTime": "8-10分钟", "watchGoal": "重点看有理数分类、0的位置、带负号的字母不一定是负数"},
+          warmup: "欢迎来到今天的星图。先不用追求全会，今天只要学会分清“分类标准”和“符号陷阱”，就已经点亮第一格。",
+          math: [
+            {"id":"m1_1","point":"《易错500题》1.1 母题：有理数分类","q":"下列说法正确的是？","options":["A. 正整数和负整数统称整数","B. 整数和分数统称有理数","C. 带负号的数一定是负数"],"ans":1,"hint":"先想“有理数按定义怎么分”。","explain":"有理数按定义可分为整数和分数；整数还包括0，所以A少了0；若a是负数，-a反而可能是正数，所以C不一定对。","encouragement":"你抓住了分类标准，这类题就不乱了。"},
+            {"id":"m1_2","point":"分类计数","q":"在 -1/2，0.81，-3，22/7，-3.1，-4，171，0，3.14，1.6 中，正数有几个？","options":["A. 4个","B. 5个","C. 6个"],"ans":1,"hint":"正数不只整数，小数和分数也可能是正数。","explain":"0.81、22/7、171、3.14、1.6 是正数，共5个；0既不是正数也不是负数。","encouragement":"没有被整数、小数、分数混在一起吓到。"},
+            {"id":"m1_3","point":"非负整数","q":"在 -2，0，3，4.5，-7，8 中，非负整数有几个？","options":["A. 2个","B. 3个","C. 4个"],"ans":1,"hint":"非负包括0，整数不能带小数点。","explain":"非负整数是0、3、8，共3个；4.5不是整数。","encouragement":"“非负”和“整数”两个条件都看到了。"},
+            {"id":"m1_4","point":"带负号的数","q":"关于 -a，下列说法正确的是？","options":["A. -a 一定是负数","B. -a 不一定是负数","C. -a 一定等于0"],"ans":1,"hint":"可以试试 a=-4。","explain":"如果a=-4，那么 -a=4，是正数；所以 -a 不一定是负数。","encouragement":"这就是《易错500题》里很典型的符号陷阱。"},
+            {"id":"m1_5","point":"正负号表示相反意义的量","q":"如果气温升高2摄氏度记作 +2摄氏度，那么气温下降2摄氏度应记作？","options":["A. +2摄氏度","B. -2摄氏度","C. -4摄氏度"],"ans":1,"hint":"下降和升高方向相反。","explain":"升高用正号，下降就用负号，所以记作 -2摄氏度。","encouragement":"应用题里先看方向，符号就稳了。"},
+            {"id":"m1_6","point":"0的分类","q":"下列说法正确的是？","options":["A. 0是正数","B. 0是负数","C. 0既不是正数也不是负数"],"ans":2,"hint":"0是分界点。","explain":"0不是正数，也不是负数，但0是整数，也是有理数。","encouragement":"0的身份很特别，你抓住了。"},
+            {"id":"m1_7","point":"负分数识别","q":"下列数中，属于负分数的是？","options":["A. -3.1","B. -4","C. 0"],"ans":0,"hint":"有限小数也可以看成分数。","explain":"-3.1 是负数，且可以写成分数；-4是负整数，0不是负数。","encouragement":"会把小数纳入有理数分类了。"},
+            {"id":"m1_8","point":"同一分类标准","q":"下面哪组分类使用的是同一标准？","options":["A. 正数、分数、0","B. 正有理数、0、负有理数","C. 整数、负数、分数"],"ans":1,"hint":"同一标准不能一会儿按定义，一会儿按性质。","explain":"正有理数、0、负有理数是按性质分类；整数和分数是按定义分类。A、C混用了标准。","encouragement":"这题很易错，你已经在按标准思考了。"},
+            {"id":"m1_9","point":"基准量","q":"以海平面为0米，高于海平面3米记作 +3米，那么 -5米表示？","options":["A. 低于海平面5米","B. 高于海平面5米","C. 距离海平面5米但方向不确定"],"ans":0,"hint":"负号表示和正方向相反。","explain":"+3表示高于海平面，-5就表示低于海平面5米。","encouragement":"能把抽象符号放回真实场景。"},
+            {"id":"m1_10","point":"综合判断","q":"若a=-2，则 -a 是什么数？","options":["A. 负数","B. 正数","C. 0"],"ans":1,"hint":"先把a的值代进去。","explain":"a=-2，所以 -a=-(-2)=2，是正数。","encouragement":"Day 1 易错分类通关。"}
+          ],
+          english: [
+            {"id":"e1_1","point":"【词族】","q":"ability 和 able 的关系更接近？","options":["A. able是形容词，ability是名词","B. 两个词都只表示地点","C. ability是否定词"],"ans":0,"hint":"able 是“有能力的”。","explain":"able 表示有能力的，ability 表示能力。看到 -ity，常往名词方向想。","encouragement":"词族一连起来，背词压力会小很多。"},
+            {"id":"e1_2","point":"【词义场景】","q":"absent 最适合放进哪个场景？","options":["A. 今天没到场","B. 成功完成目标","C. 增加一个数字"],"ans":0,"hint":"absent 和“不在场”有关。","explain":"absent 表示缺席、不在的。可以和“课堂点名少了一个人”绑定。","encouragement":"场景记忆很适合基础弱的时候启动。"},
+            {"id":"e1_3","point":"【近形辨义】","q":"accept 更接近哪个意思？","options":["A. 接受","B. 事故","C. 在上方"],"ans":0,"hint":"accept an invitation。","explain":"accept 是接受。可以想成点击“接受任务”。","encouragement":"把词放进按钮动作里，很好记。"},
+            {"id":"e1_4","point":"【名词判断】","q":"accident 最可能表示？","options":["A. 意外事故","B. 实际上","C. 缺席的"],"ans":0,"hint":"an accident。","explain":"accident 是事故、意外。它常作可数名词。","encouragement":"名词可以先和一个画面绑定。"},
+            {"id":"e1_5","point":"【词族】","q":"achieve 和 achievement 的关系是？","options":["A. 动词和名词","B. 颜色和数字","C. 否定和肯定"],"ans":0,"hint":"achievement 常表示成就。","explain":"achieve 是实现、达到；achievement 是成就、成绩，-ment常把动作变成名词。","encouragement":"会从后缀猜词性了。"},
+            {"id":"e1_6","point":"【词性】","q":"active 在 'an active student' 中表示？","options":["A. 活跃的","B. 实际上","C. 地址"],"ans":0,"hint":"active student。","explain":"active 是活跃的、积极的，是形容词。","encouragement":"放进短语里，词义更稳。"},
+            {"id":"e1_7","point":"【副词线索】","q":"actually 通常更接近？","options":["A. 实际上","B. 加法","C. 害怕的"],"ans":0,"hint":"actual 是实际的。","explain":"actual 是实际的，actually 是实际上；-ly 常提示副词。","encouragement":"后缀 -ly 是一个很有用的提示牌。"},
+            {"id":"e1_8","point":"【构词】","q":"addition 最可能来自哪个动词？","options":["A. add","B. accept","C. absent"],"ans":0,"hint":"add 是加。","explain":"add 是增加、加上，addition 是增加、加法。","encouragement":"数学里的 addition 也能帮你记英语。"},
+            {"id":"e1_9","point":"【句子理解】","q":"I was absent, but I achieved my goal. 这句里 but 表示？","options":["A. 前后有转折","B. 两件事完全一样","C. 数字增加"],"ans":0,"hint":"缺席了，但是达成目标。","explain":"but 表示转折：虽然缺席，但还是达成了目标。","encouragement":"开始从单词走到句子了。"},
+            {"id":"e1_10","point":"【综合】","q":"哪组都更像“名词”？","options":["A. ability, accident, achievement, addition","B. able, active, actual, absent","C. accept, achieve, add, act"],"ans":0,"hint":"-ity、-ment、-tion 都常见于名词。","explain":"ability、accident、achievement、addition 都可以作名词。","encouragement":"Day 1 英语词族通关。"}
+          ],
+          chinese: {"title":"打字填空：春天地图第一眼","time":"10-15分钟","chineseCatalog":{"textbook":"部编版七年级语文","unit":"七年级上册 第一单元","text":"春","genre":"写景散文","learningPoint":"找景物、抓氛围、写一句理由","taskType":"写景散文：画面与氛围填空","stage":"前15天轻量日常委托","examAbility":"提取景物和画面信息"},"mission":"读《春》的开头或任意一段。把文字想象成一张刚刚点亮的地图，写出你先看到的一个景物和一种感觉。","answerFormat":"我先看到____，这种画面让我觉得____。","sampleAnswer":"我先看到慢慢亮起来的春草，这种画面让我觉得空气变轻了。","parentCheck":"只看是否愿意打字完成，不评价文采。","reward":"获得道具：春光镜头卡"},
+          review: "今天复盘：数学重点不是会背定义，而是会分清分类标准；英语先用词族抓 able/ability、achieve/achievement。",
+          tracking: {"completion":"未开始/完成部分/完成全部","mathWrongTags":[],"englishWrongTags":[],"chineseResponseLength":"","nextDayAdjustment":"如果“带负号一定是负数”错了，Day 2 先用 a=-2 举例再进入数轴。"},
+          reward: "完成后领取：易错星图入门徽章"
+        },
+        "2": {
+          title: "易错星图 2：数轴上的 a、-a 与距离",
+          dailyCatalog: {
+            mathChapter: "《易错500题》第1章 1.1 认识有理数",
+            mathTopic: "《易错500题》1.1 数轴与相反数位置",
+            mathPoint: "用数轴判断 a、-a、1 的大小关系，并区分位置、距离和方向",
+            englishModule: "中考666词 Day 2",
+            englishWords: WORD_BANK_666.slice(15, 30),
+            englishMethod: "近义辨析：advice/advise，agree/agreement，alone/lonely",
+            chineseUnit: "七年级上册 第一单元",
+            chineseText: "济南的冬天",
+            chineseTaskType: "写景散文：温度与城市氛围填空",
+            review: "复习Day 1新词，新增Day 2中考词；数学对应《易错500题》1.1母题2",
+            stage: "第1-4天：按课本目录顺序，用易错母题启动"
+          },
+          mathVideo: {"platform":"B站","searchKeyword":"数学微课帮 七年级 数轴 相反数 大小比较","watchTime":"8-10分钟","watchGoal":"重点看数轴上右大左小、相反数关于0对称"},
+          warmup: "今天欢迎来到星图坐标层。别急着心算，先把数放到线上：左小右大，离0远近看距离。",
+          math: [
+            {"id":"m2_1","point":"《易错500题》1.1 母题：a、-a、1大小","q":"已知 a 在数轴上位于 -2 和 -1 之间，则 a、1、-a 的大小关系是？","options":["A. a < 1 < -a","B. 1 < a < -a","C. -a < a < 1"],"ans":0,"hint":"a是小于-1的负数，-a是大于1的正数。","explain":"a在-2和-1之间，所以a<0且|a|>1，-a在1和2之间，因此 a < 1 < -a。","encouragement":"这就是数轴题的核心：先定位，再比较。"},
+            {"id":"m2_2","point":"数轴表达式","q":"若 a=-0.5，b=1.5，则 |a-b|-|b| 的结果是？","options":["A. -0.5","B. 0.5","C. 2"],"ans":1,"hint":"先算a-b，再算绝对值。","explain":"a-b=-2，所以|a-b|=2；|b|=1.5，2-1.5=0.5。","encouragement":"能把图形位置转成式子计算了。"},
+            {"id":"m2_3","point":"相反数位置","q":"点A表示 -2，点B与A关于0对称，则点B表示？","options":["A. +2","B. -1/2","C. 0"],"ans":0,"hint":"关于0对称就是相反数。","explain":"-2 的相反数是 +2，所以B表示 +2。","encouragement":"相反数就是数轴上的镜像点。"},
+            {"id":"m2_4","point":"绝对值初步","q":"数轴上到原点距离为4的点表示的数是？","options":["A. 只能是4","B. 只能是-4","C. +4或-4"],"ans":2,"hint":"原点左右各有一个点。","explain":"离0有4个单位长度的点有两个，分别是 +4 和 -4。","encouragement":"距离没有方向，但位置有左右。"},
+            {"id":"m2_5","point":"距离比较","q":"在 -3，-1，2 中，离0最远的数是？","options":["A. -3","B. -1","C. 2"],"ans":0,"hint":"比较绝对值。","explain":"|-3|=3，|-1|=1，|2|=2，所以 -3 离0最远。","encouragement":"用绝对值比较远近，很稳。"},
+            {"id":"m2_6","point":"跨0距离","q":"数轴上 -5 与 +2 相距多少个单位长度？","options":["A. 3","B. 7","C. -7"],"ans":1,"hint":"从-5到0，再从0到2。","explain":"-5到0是5个单位，0到2是2个单位，共7个单位。距离不写负数。","encouragement":"跨过0也没有乱。"},
+            {"id":"m2_7","point":"区间与相反数","q":"若 -1 < a < 0，则 -a 的范围是？","options":["A. -1 < -a < 0","B. 0 < -a < 1","C. -a > 1"],"ans":1,"hint":"a在0左边一小段，-a会到0右边一小段。","explain":"a是介于-1和0之间的负数，取相反数后在0和1之间。","encouragement":"你开始会用区间想数了。"},
+            {"id":"m2_8","point":"数轴移动","q":"从 -2 出发向右移动5个单位，到达？","options":["A. +3","B. -7","C. +5"],"ans":0,"hint":"向右是增加。","explain":"-2+5=3，所以到达 +3。","encouragement":"移动题也能转成加法。"},
+            {"id":"m2_9","point":"相反数与绝对值","q":"已知 a、b、c 在数轴上从左到右排列，且 b+c=0，若a在b左边，则 |a|、|b|、|c| 中最大的是？","options":["A. |a|","B. |b|","C. |c|"],"ans":0,"hint":"b和c互为相反数，a比b还靠左。","explain":"b+c=0说明b和c关于0对称，|b|=|c|；a在b左边，离0更远，所以|a|最大。","encouragement":"这题已经有推理味道了。"},
+            {"id":"m2_10","point":"数学思想","q":"A、B、C在数轴上从左到右等距排列，若 |a|>|c|>|b|，原点最可能在？","options":["A. A的左边","B. A与B之间","C. B与C之间"],"ans":2,"hint":"要让B离0最近，原点应靠近B。","explain":"|b|最小，说明B离原点最近；又要|c|>|b|且|a|>|c|，原点应在B与C之间并更靠近B。","encouragement":"Day 2 数轴易错母题通关。"}
+          ],
+          english: [
+            {"id":"e2_1","point":"【词义】","q":"address 最常见的意思之一是？","options":["A. 地址","B. 害怕的","C. 几乎"],"ans":0,"hint":"home address。","explain":"address 可以表示地址，也可作动词表示处理、演讲。基础阶段先抓“地址”。","encouragement":"一个词先抓最常见义就好。"},
+            {"id":"e2_2","point":"【词性辨析】","q":"advice 和 advise 的区别更接近？","options":["A. advice是名词，advise是动词","B. advice是颜色，advise是数字","C. 两个都只表示害怕"],"ans":0,"hint":"give advice / advise sb to do。","explain":"advice 是建议，名词；advise 是建议，动词。","encouragement":"近形词分清词性，错误会少很多。"},
+            {"id":"e2_3","point":"【词族】","q":"agree 和 agreement 的关系是？","options":["A. 动词和名词","B. 正数和负数","C. 颜色和物品"],"ans":0,"hint":"-ment常提示名词。","explain":"agree 是同意，agreement 是协议、同意。","encouragement":"Day 1学过的 -ment 又用上了。"},
+            {"id":"e2_4","point":"【短语】","q":"be afraid of 更接近？","options":["A. 害怕……","B. 允许……","C. 同意……"],"ans":0,"hint":"afraid 是害怕的。","explain":"afraid 常见搭配是 be afraid of，表示害怕某物或某事。","encouragement":"单词和搭配一起记，更像真的会用。"},
+            {"id":"e2_5","point":"【用法】","q":"afford 常和哪个结构搭配表示“负担得起做某事”？","options":["A. afford to do","B. afford doing every","C. afford of"],"ans":0,"hint":"can afford to buy。","explain":"afford 常用 afford to do，表示有能力或钱去做某事。","encouragement":"抓固定搭配，比背中文更靠谱。"},
+            {"id":"e2_6","point":"【动词搭配】","q":"allow sb to do sth 表示？","options":["A. 允许某人做某事","B. 独自做某事","C. 几乎做某事"],"ans":0,"hint":"allow 是允许。","explain":"allow sb to do sth 是常见结构。","encouragement":"这类结构以后阅读里很常见。"},
+            {"id":"e2_7","point":"【副词】","q":"almost 的意思更接近？","options":["A. 几乎，差不多","B. 独自一人","C. 优点"],"ans":0,"hint":"almost done。","explain":"almost 表示几乎、差不多。almost finished 就是差不多完成了。","encouragement":"副词抓语气，不硬背。"},
+            {"id":"e2_8","point":"【易混】","q":"alone 和 lonely 的区别更接近？","options":["A. alone偏“独自”，lonely偏“孤独感”","B. alone是地址，lonely是协议","C. 两个都表示同意"],"ans":0,"hint":"alone 是状态，lonely 更有感受。","explain":"alone强调一个人；lonely强调孤独、寂寞的感觉。","encouragement":"这就是中考常考的细微差别。"},
+            {"id":"e2_9","point":"【词义】","q":"advantage 最接近？","options":["A. 优势，优点","B. 焦虑","C. 区域"],"ans":0,"hint":"have an advantage。","explain":"advantage 是优势、优点，常与 disadvantage 对比。","encouragement":"反义词以后可以一起记。"},
+            {"id":"e2_10","point":"【综合】","q":"I agree with your advice. 这句话大意是？","options":["A. 我同意你的建议","B. 我害怕你的地址","C. 我几乎独自完成"],"ans":0,"hint":"agree 同意，advice 建议。","explain":"agree with 表示同意，advice 是建议。","encouragement":"Day 2 英语近形词通关。"}
+          ],
+          chinese: {"title":"打字填空：济南冬天的温度","time":"10-15分钟","chineseCatalog":{"textbook":"部编版七年级语文","unit":"七年级上册 第一单元","text":"济南的冬天","genre":"写景散文","learningPoint":"抓地点氛围和作者情感","taskType":"写景散文：温度与城市氛围填空","stage":"前15天轻量日常委托","examAbility":"提取环境氛围并说明理由"},"mission":"读《济南的冬天》的开头。把济南想成一张冬日地图，写出它给你的温度感和一个理由。","answerFormat":"这个冬天地图像____，因为____。","sampleAnswer":"这个冬天地图像一盏暖灯，因为文字里的冬天不冷硬，反而很温和。","parentCheck":"只确认她能填出一种感觉和一个理由。","reward":"获得道具：温度滤镜卡"},
+          review: "今天复盘：数轴题先定位，再比较；英语重点分清 advice/advise、agree/agreement。",
+          tracking: {"completion":"未开始/完成部分/完成全部","mathWrongTags":[],"englishWrongTags":[],"chineseResponseLength":"","nextDayAdjustment":"如果数轴比较错，多画一条0、1、-1的简线再做。"},
+          reward: "完成后领取：数轴定位徽章"
+        },
+        "3": {
+          title: "易错星图 3：相反数与倒数不要混",
+          dailyCatalog: {
+            mathChapter: "《易错500题》第1章 1.1 认识有理数",
+            mathTopic: "《易错500题》1.1 相反数与倒数",
+            mathPoint: "相反数之和为0，倒数之积为1；0有相反数但没有倒数",
+            englishModule: "中考666词 Day 3",
+            englishWords: WORD_BANK_666.slice(30, 45),
+            englishMethod: "连接词与词族：although，appear/appearance，argue/argument",
+            chineseUnit: "七年级上册 第一单元",
+            chineseText: "雨的四季",
+            chineseTaskType: "自读散文：季节画面与感官填空",
+            review: "复习Day 1-Day 2新词，新增Day 3中考词；数学对应《易错500题》1.1母题3",
+            stage: "第1-4天：按课本目录顺序，用易错母题启动"
+          },
+          mathVideo: {"platform":"B站","searchKeyword":"数学微课帮 七年级 相反数 倒数 绝对值","watchTime":"8-10分钟","watchGoal":"重点看相反数和倒数的区别"},
+          warmup: "今天的欢迎语：你不是在背概念，你是在给概念贴标签。相反数看“和为0”，倒数看“积为1”。",
+          math: [
+            {"id":"m3_1","point":"《易错500题》1.1 母题：相反数与倒数区别","q":"-6 的相反数是？","options":["A. 6","B. 1/6","C. -1/6"],"ans":0,"hint":"相反数只变符号。","explain":"-6 的相反数是 6；1/6 是倒数方向的干扰项。","encouragement":"这题的关键就是别把相反数和倒数混起来。"},
+            {"id":"m3_2","point":"倒数","q":"-1/2024 的倒数是？","options":["A. 2024","B. -2024","C. 1/2024"],"ans":1,"hint":"倒数相乘得1，符号不乱变。","explain":"(-1/2024) x (-2024)=1，所以倒数是 -2024。","encouragement":"倒数看乘积为1，稳。"},
+            {"id":"m3_3","point":"相反数陷阱","q":"3 的相反数是？","options":["A. -3","B. 1/3","C. -1/3"],"ans":0,"hint":"只换符号，不翻分母分子。","explain":"3 的相反数是 -3；1/3 是倒数。","encouragement":"典型陷阱躲过去了。"},
+            {"id":"m3_4","point":"相反数性质","q":"若 x 与 7 互为相反数，则 x 等于？","options":["A. -7","B. 1/7","C. 7"],"ans":0,"hint":"互为相反数的两个数和为0。","explain":"x+7=0，所以x=-7。","encouragement":"用性质做题，比背答案更稳。"},
+            {"id":"m3_5","point":"方程感知","q":"如果 m+3 与 2m 互为相反数，那么 m 的值是？","options":["A. 0","B. -1","C. -3"],"ans":1,"hint":"互为相反数，两个式子相加等于0。","explain":"m+3+2m=0，3m+3=0，所以m=-1。","encouragement":"这已经是小方程了，你能接住。"},
+            {"id":"m3_6","point":"倒数性质","q":"两个数互为倒数，则它们的积是？","options":["A. 0","B. 1","C. -1"],"ans":1,"hint":"倒数看乘积。","explain":"互为倒数的两个数乘积为1。","encouragement":"相反数看和，倒数看积。"},
+            {"id":"m3_7","point":"0的特殊性","q":"关于0，下列说法正确的是？","options":["A. 0的相反数是0，但0没有倒数","B. 0的倒数是0","C. 0没有相反数"],"ans":0,"hint":"0不能作除数。","explain":"0的相反数仍是0；因为没有数与0相乘得1，所以0没有倒数。","encouragement":"0又是特殊身份，记住了就少错很多。"},
+            {"id":"m3_8","point":"符号化简","q":"-(-1.5) 的结果是？","options":["A. -1.5","B. 1.5","C. 0"],"ans":1,"hint":"负负得正。","explain":"-(-1.5)=1.5，可以理解为 -1.5 的相反数。","encouragement":"双重负号没有绕住你。"},
+            {"id":"m3_9","point":"相反数组合","q":"下列哪组数互为相反数？","options":["A. -2.4 和 2.4","B. -2.4 和 1/2.4","C. 2.4 和 0"],"ans":0,"hint":"符号相反，绝对值相同。","explain":"-2.4 和 2.4 符号相反、到0距离相同，互为相反数。","encouragement":"判断标准很清楚。"},
+            {"id":"m3_10","point":"综合推理","q":"a 的相反数是 b，b 的倒数是 1/3，则 a 等于？","options":["A. -3","B. 3","C. -1/3"],"ans":0,"hint":"先由倒数求b，再由相反数求a。","explain":"b的倒数是1/3，说明b=3；a的相反数是b=3，所以a=-3。","encouragement":"Day 3 相反数与倒数通关。"}
+          ],
+          english: [
+            {"id":"e3_1","point":"【连接词】","q":"although 最常用来表达？","options":["A. 虽然，尽管","B. 已经","C. 在……之间"],"ans":0,"hint":"although it is hard。","explain":"although 表示虽然、尽管，引出让步关系。","encouragement":"连接词是读长句的路标。"},
+            {"id":"e3_2","point":"【副词】","q":"already 通常表示？","options":["A. 已经","B. 争论","C. 区域"],"ans":0,"hint":"I have already done it。","explain":"already 是已经，常和完成的感觉有关。","encouragement":"时间副词抓住了。"},
+            {"id":"e3_3","point":"【词族】","q":"appear 和 appearance 的关系是？","options":["A. 动词和名词","B. 正数和负数","C. 颜色和数量"],"ans":0,"hint":"appearance 常表示外貌、出现。","explain":"appear 是出现，appearance 是出现、外貌，-ance常提示名词。","encouragement":"词族法继续可用。"},
+            {"id":"e3_4","point":"【情绪词】","q":"anxiety 更接近？","options":["A. 焦虑","B. 数量","C. 回答"],"ans":0,"hint":"anxious 是焦虑的。","explain":"anxiety 是焦虑、担心，是名词。","encouragement":"情绪词可以放进真实感受里记。"},
+            {"id":"e3_5","point":"【介词】","q":"among 通常表示？","options":["A. 在三者或更多之中","B. 沿着","C. 已经"],"ans":0,"hint":"among many stars。","explain":"among 常表示在三者或更多的人/物之中。","encouragement":"介词先抓画面位置。"},
+            {"id":"e3_6","point":"【搭配】","q":"apply for 更接近？","options":["A. 申请","B. 争吵","C. 回答"],"ans":0,"hint":"apply for a club。","explain":"apply for 表示申请某物、申请加入。","encouragement":"动词搭配又收下一组。"},
+            {"id":"e3_7","point":"【词族】","q":"argue 和 argument 的关系是？","options":["A. 动词和名词","B. 副词和介词","C. 数字和颜色"],"ans":0,"hint":"argument 是争论、论点。","explain":"argue 是争论，argument 是争论或论点，-ment常提示名词。","encouragement":"-ment 这个线索越来越熟了。"},
+            {"id":"e3_8","point":"【形容词】","q":"amazing 更接近？","options":["A. 令人惊奇的","B. 已经","C. 区域"],"ans":0,"hint":"an amazing view。","explain":"amazing 表示令人惊奇的、了不起的。","encouragement":"形容词可以和画面绑定。"},
+            {"id":"e3_9","point":"【句子理解】","q":"Although I was anxious, I answered the question. 大意是？","options":["A. 虽然我焦虑，但我回答了问题","B. 我已经在区域里争吵","C. 我沿着数量申请"],"ans":0,"hint":"although 虽然，answer 回答。","explain":"although 引出转折背景，answered the question 是回答了问题。","encouragement":"你开始能读小长句了。"},
+            {"id":"e3_10","point":"【综合】","q":"哪组是词族配对？","options":["A. appear/appearance，argue/argument","B. along/already，among/amount","C. answer/anxiety，area/apply"],"ans":0,"hint":"看后缀 -ance、-ment。","explain":"appear/appearance、argue/argument 都是动词到名词的词族变化。","encouragement":"Day 3 英语词族通关。"}
+          ],
+          chinese: {"title":"打字填空：雨的四季感官地图","time":"10-15分钟","chineseCatalog":{"textbook":"部编版七年级语文","unit":"七年级上册 第一单元","text":"雨的四季","genre":"写景散文","learningPoint":"用感官词捕捉景物变化","taskType":"自读散文：季节画面与感官填空","stage":"前15天轻量日常委托","examAbility":"抓关键词并形成画面描述"},"mission":"读《雨的四季》中的一个季节片段。选一个你最容易想象的感官：声音、颜色、气味或触感。","answerFormat":"我抓到的感官是____，它让我想到____。","sampleAnswer":"我抓到的感官是声音，它让我想到雨点落在树叶上，很轻也很密。","parentCheck":"只看是否填出一个感官和一个画面。","reward":"获得道具：雨声收集卡"},
+          review: "今天复盘：相反数看和为0，倒数看积为1；英语用 although、appear/appearance、argue/argument 读句子。",
+          tracking: {"completion":"未开始/完成部分/完成全部","mathWrongTags":[],"englishWrongTags":[],"chineseResponseLength":"","nextDayAdjustment":"如果相反数和倒数混淆，Day 4 开始前先写两句：和为0、积为1。"},
+          reward: "完成后领取：概念分身徽章"
+        },
+        "4": {
+          title: "易错星图 4：绝对值与数轴距离综合",
+          dailyCatalog: {
+            mathChapter: "《易错500题》第1章 1.1 认识有理数",
+            mathTopic: "《易错500题》1.1 绝对值与距离",
+            mathPoint: "绝对值表示到0的距离；|x-a|表示到a的距离，注意范围条件",
+            englishModule: "中考666词 Day 4",
+            englishWords: WORD_BANK_666.slice(45, 60),
+            englishMethod: "词族与搭配：attend/attention，attract/attraction，avoid doing",
+            chineseUnit: "七年级上册 第一单元",
+            chineseText: "古代诗歌四首",
+            chineseTaskType: "古诗词：意象与画面填空",
+            review: "复习Day 1-Day 3新词，新增Day 4中考词；数学对应《易错500题》1.1母题4和提升题",
+            stage: "第1-4天：按课本目录顺序，用易错母题启动"
+          },
+          mathVideo: {"platform":"B站","searchKeyword":"数学微课帮 七年级 绝对值 数轴距离","watchTime":"8-10分钟","watchGoal":"重点看绝对值是距离，距离不带负号，但点有左右两个"},
+          warmup: "今天欢迎来到第4天。绝对值不是把负号随便擦掉，它是在问“离目标点有多远”。先看距离，再看条件。",
+          math: [
+            {"id":"m4_1","point":"《易错500题》1.1 母题：绝对值与相反数联系","q":"数轴上与原点距离为5个单位长度的点表示的数是？","options":["A. 只能是5","B. 只能是-5","C. +5或-5"],"ans":2,"hint":"原点左右各有一个点。","explain":"距离为5的点在0的左右两侧，分别表示 +5 和 -5。","encouragement":"绝对值反推一定要想左右两个点。"},
+            {"id":"m4_2","point":"绝对值反推","q":"如果一个数的绝对值是2，那么这个数可能是？","options":["A. 只能是2","B. +2或-2","C. 只能是-2"],"ans":1,"hint":"离0有2格。","explain":"到0距离为2的点有两个：+2和-2。","encouragement":"没有漏掉负数那一边。"},
+            {"id":"m4_3","point":"范围条件","q":"如果 |x-2|=x-2，那么 x 的取值范围是？","options":["A. x<=2","B. x>=2","C. x<2"],"ans":1,"hint":"绝对值等于原式，说明原式非负。","explain":"|x-2|=x-2 成立时，x-2>=0，所以 x>=2。","encouragement":"这题有点难，你能用条件想就很好。"},
+            {"id":"m4_4","point":"条件筛选","q":"若 |x|=3，且 x<0，则 x 等于？","options":["A. 3","B. -3","C. 0"],"ans":1,"hint":"绝对值给两个可能，再用x<0筛选。","explain":"|x|=3时x可能是3或-3；x<0，所以x=-3。","encouragement":"先列可能，再用条件筛，很稳。"},
+            {"id":"m4_5","point":"绝对值外的负号","q":"-| -4 | 的结果是？","options":["A. 4","B. -4","C. 0"],"ans":1,"hint":"先算绝对值，再看外面的负号。","explain":"|-4|=4，外面还有负号，所以 -|-4|=-4。","encouragement":"顺序对了，陷阱就没了。"},
+            {"id":"m4_6","point":"绝对值相等","q":"若 |a|=|b|，且 a 不等于 b，则 a 与 b 的关系是？","options":["A. 互为相反数","B. 互为倒数","C. 都等于0"],"ans":0,"hint":"距离相同但不是同一个点。","explain":"到0距离相同的两个不同点在0的两侧，所以互为相反数。","encouragement":"绝对值和相反数的联系抓住了。"},
+            {"id":"m4_7","point":"整数范围","q":"满足 |x|<3 的整数 x 有几个？","options":["A. 3个","B. 5个","C. 6个"],"ans":1,"hint":"列出 -2、-1、0、1、2。","explain":"|x|<3表示离0小于3个单位，整数有 -2、-1、0、1、2，共5个。","encouragement":"范围题也能列点解决。"},
+            {"id":"m4_8","point":"指定点距离","q":"与 -2 距离为5的点可能表示？","options":["A. +3或-7","B. 只能+3","C. 只能-7"],"ans":0,"hint":"从-2向右5格，也可以向左5格。","explain":"-2+5=3，-2-5=-7，所以可能是+3或-7。","encouragement":"|x-a|的思想已经开始出现了。"},
+            {"id":"m4_9","point":"数轴表达式","q":"若 a=-0.5，b=1.5，则 |a-b|-|b| 的结果等于？","options":["A. -a","B. a","C. b"],"ans":0,"hint":"先算结果，再和选项比较。","explain":"|a-b|=|-2|=2，|b|=1.5，差是0.5；因为a=-0.5，所以-a=0.5。","encouragement":"图、数、式能互相转换了。"},
+            {"id":"m4_10","point":"综合判断","q":"如果 |x|=x，那么 x 一定满足？","options":["A. x是非负数","B. x是负数","C. x只能等于0"],"ans":0,"hint":"试试正数和0。","explain":"当x>=0时，|x|=x；负数不满足。所以x是非负数。","encouragement":"Day 4 绝对值易错母题通关。"}
+          ],
+          english: [
+            {"id":"e4_1","point":"【情绪词】","q":"ashamed 更接近？","options":["A. 羞愧的","B. 吸引","C. 平衡"],"ans":0,"hint":"feel ashamed。","explain":"ashamed 表示羞愧的、惭愧的，常和 feel 连用。","encouragement":"情绪词放进真实感受更好记。"},
+            {"id":"e4_2","point":"【搭配】","q":"be attached to 更接近？","options":["A. 依恋，附属于","B. 避免做某事","C. 打败某人"],"ans":0,"hint":"attach 有连接、附着的感觉。","explain":"attached 表示附加的、依恋的，be attached to 是常见搭配。","encouragement":"搭配比孤立单词更像能用的英语。"},
+            {"id":"e4_3","point":"【词族】","q":"attend 和 attention 的联系更接近？","options":["A. 都有“注意/出席”的线索","B. 都表示丑陋","C. 都是数字"],"ans":0,"hint":"pay attention。","explain":"attend可表示参加、出席；attention表示注意力。先把 attent 当作“注意/到场”的线索。","encouragement":"词根线索不要求完美，能帮你猜就好。"},
+            {"id":"e4_4","point":"【词族】","q":"attract 和 attraction 的关系是？","options":["A. 动词和名词","B. 形容词和副词","C. 介词和连词"],"ans":0,"hint":"-ion常提示名词。","explain":"attract 是吸引，attraction 是吸引力或景点。","encouragement":"-ion 名词线索又出现了。"},
+            {"id":"e4_5","point":"【固定用法】","q":"avoid 后面常接哪种形式？","options":["A. avoid doing","B. avoid to doing","C. avoid did"],"ans":0,"hint":"avoid making mistakes。","explain":"avoid 后常接动词-ing，表示避免做某事。","encouragement":"这类结构在中考阅读里很实用。"},
+            {"id":"e4_6","point":"【词义】","q":"awful 最接近？","options":["A. 糟糕的","B. 基础的","C. 平衡"],"ans":0,"hint":"an awful day。","explain":"awful 表示糟糕的、可怕的。","encouragement":"形容词先抓情绪色彩。"},
+            {"id":"e4_7","point":"【词族】","q":"base 和 basic 的关系是？","options":["A. 名词/动词线索与形容词","B. 数字和颜色","C. 否定和重复"],"ans":0,"hint":"basic knowledge。","explain":"base 可表示基础、基地；basic 是基础的、基本的。","encouragement":"base/basic 很适合一起背。"},
+            {"id":"e4_8","point":"【易混义】","q":"bear 除了“熊”，还可以表示？","options":["A. 忍受，承受","B. 增加","C. 申请"],"ans":0,"hint":"bear the pain。","explain":"bear 可作名词“熊”，也可作动词“忍受、承受”。","encouragement":"多义词先抓最常见的两个画面。"},
+            {"id":"e4_9","point":"【动词】","q":"beat 在比赛场景中常表示？","options":["A. 打败","B. 允许","C. 出现"],"ans":0,"hint":"beat the team。","explain":"beat 可以表示打败、敲打。比赛里常是打败。","encouragement":"场景能帮你选词义。"},
+            {"id":"e4_10","point":"【综合】","q":"We should avoid awful mistakes and pay attention. 大意更接近？","options":["A. 我们应该避免糟糕错误并集中注意","B. 我们应该吸引熊并打败基础","C. 我们应该羞愧地申请"],"ans":0,"hint":"avoid 避免，awful 糟糕的，attention 注意。","explain":"句子核心是 avoid mistakes 和 pay attention。","encouragement":"Day 4 英语搭配通关。"}
+          ],
+          chinese: {"title":"打字填空：古诗里的远景镜头","time":"10-15分钟","chineseCatalog":{"textbook":"部编版七年级语文","unit":"七年级上册 第一单元","text":"古代诗歌四首","genre":"古诗词","learningPoint":"抓意象、画面和情绪","taskType":"古诗词：意象与画面填空","stage":"前15天轻量日常委托","examAbility":"由意象推断情感"},"mission":"从《观沧海》或本课任一首诗里选一个意象，比如海、山、月、风。写出这个意象带来的画面。","answerFormat":"我选的意象是____，它让我看到____。","sampleAnswer":"我选的意象是海，它让我看到很辽阔的远方，好像镜头一下子打开了。","parentCheck":"只看是否能写出一个意象和一个画面。","reward":"获得道具：远景镜头卡"},
+          review: "今天复盘：绝对值是距离，反推时常有左右两个答案；英语重点是 attend/attention、attract/attraction、avoid doing。",
+          tracking: {"completion":"未开始/完成部分/完成全部","mathWrongTags":[],"englishWrongTags":[],"chineseResponseLength":"","nextDayAdjustment":"如果 |x-a| 类距离题难，Day 5 先只做左右各走几格的图形题。"},
+          reward: "完成后领取：距离星盘徽章"
+        }
+      };
+
+      Object.entries(regenerated).forEach(([dayId, dayPatch]) => {
+        if (!DATA.days[dayId]) return;
+        Object.assign(DATA.days[dayId], dayPatch);
+      });
+    }
 
     const titleEl = document.getElementById("pageTitle");
     const introEl = document.getElementById("pageIntro");
@@ -1406,6 +1772,45 @@
 
     function visibleBySubject(subject) {
       return state.subject === "all" || state.subject === subject;
+    }
+
+    function getDayNumber(dayId) {
+      const dayNumber = Number(dayId);
+      return Number.isFinite(dayNumber) ? dayNumber : 1;
+    }
+
+    function getNewWordsForDay(dayId) {
+      const dayNumber = getDayNumber(dayId);
+      const start = (dayNumber - 1) * WORDS_PER_DAY;
+      if (start >= WORD_BANK_666.length) return [];
+      return WORD_BANK_666.slice(start, Math.min(start + WORDS_PER_DAY, WORD_BANK_666.length));
+    }
+
+    function getWordPlan(dayId) {
+      const dayNumber = getDayNumber(dayId);
+      const newWords = getNewWordsForDay(dayNumber);
+      const reviewGroups = REVIEW_OFFSETS
+        .map(offset => {
+          const reviewDay = dayNumber - offset;
+          if (reviewDay < 1) return null;
+          const words = getNewWordsForDay(reviewDay);
+          if (!words.length) return null;
+          return { offset, day: reviewDay, words };
+        })
+        .filter(Boolean);
+      return { dayNumber, newWords, reviewGroups };
+    }
+
+    function wordPlanSummary(dayId) {
+      const plan = getWordPlan(dayId);
+      const start = (plan.dayNumber - 1) * WORDS_PER_DAY + 1;
+      const end = Math.min(start + plan.newWords.length - 1, WORD_BANK_666.length);
+      const reviewText = plan.reviewGroups.length ? `复习${plan.reviewGroups.length}组` : "无复习";
+      return plan.newWords.length ? `666词 ${start}-${end}，${reviewText}` : "666词总复习";
+    }
+
+    function renderWordTags(words, subject = "english") {
+      return words.map(word => pill(word, subject)).join("");
     }
 
     function pill(text, subject = "") {
@@ -1608,14 +2013,13 @@
       const days = Object.values(DATA.days);
       const mathQuestions = days.reduce((sum, day) => sum + day.math.length, 0);
       const englishQuestions = days.reduce((sum, day) => sum + day.english.length, 0);
-      const words = days.reduce((sum, day) => sum + day.englishVocab.length, 0);
       const submittedCount = Object.keys(dailySubmissions).length;
       statsEl.innerHTML = `
         <div class="stat"><strong>${days.length}</strong><span>已生成天数</span></div>
         <div class="stat"><strong>45</strong><span>总路线天数</span></div>
         <div class="stat"><strong>${mathQuestions}</strong><span>数学题</span></div>
         <div class="stat"><strong>${englishQuestions}</strong><span>英语题</span></div>
-        <div class="stat"><strong>${words}</strong><span>单词卡</span></div>
+        <div class="stat"><strong>${WORD_BANK_666.length}</strong><span>666词库</span></div>
         <div class="stat"><strong>${wrongBook.length}</strong><span>错题本</span></div>
         <div class="stat"><strong>${submittedCount}</strong><span>已提交天数</span></div>
       `;
@@ -1677,7 +2081,7 @@
           <div>
             <div class="roadmap-subjects">
               <div class="roadmap-subject"><b>数学</b><span>${escapeHtml(item.math)}</span></div>
-              <div class="roadmap-subject"><b>英语</b><span>${escapeHtml(item.english)}</span></div>
+              <div class="roadmap-subject"><b>英语</b><span>${escapeHtml(item.english)}｜${escapeHtml(wordPlanSummary(item.day))}</span></div>
               <div class="roadmap-subject"><b>语文</b><span>${escapeHtml(item.chinese)}</span></div>
             </div>
             <div class="tags">${pill(item.output)}</div>
@@ -1690,6 +2094,7 @@
           <article class="card notice">
             <h3>安排原则</h3>
             <p>每天建议 90-120 分钟：数学 35-45 分钟，英语 30-40 分钟，语文 10-15 分钟，剩余时间做错题回收。低能量日不加量，只降低题面压力。</p>
+            <p>英语词库改为 PDF 中考高频666词：Day 1-Day 44 每天15个新词，Day 45 收尾6个新词。不要递增新词量，用艾宾浩斯复习增加重复次数。</p>
             <p>45天适合做“第一轮全图开荒”。如果目标是校内考试稳定提分，建议第46-90天专门做第二轮：错题、计算、阅读、单词循环。</p>
           </article>
         </section>
@@ -1752,7 +2157,7 @@
 
       const sections = [
         renderDayHeader(dayId, day),
-        renderVocab(day),
+        renderWordPlan(dayId),
         visibleBySubject("math") ? renderQuestions("数学 10 题", day.math, "math", dayId) : "",
         visibleBySubject("english") ? renderEnglishMission(day, dayId) : "",
         visibleBySubject("chinese") && includesSearch(day.chinese) ? renderChinese(dayId, day) : "",
@@ -1810,21 +2215,36 @@
       `;
     }
 
-    function renderVocab(day) {
+    function renderWordPlan(dayId) {
       if (!visibleBySubject("english")) return "";
-      const cards = day.englishVocab.filter(includesSearch).map(word => `
-        <article class="card word">
-          <div class="word-title">
-            <strong>${escapeHtml(word.word)}</strong>
-            <span>${escapeHtml(word.pos)}</span>
-          </div>
-          <p><b>${escapeHtml(word.meaning)}</b></p>
-          <p>${escapeHtml(word.memoryLogic)}</p>
-          <p>${escapeHtml(word.gameScene)}</p>
-          <p><b>例句：</b>${escapeHtml(word.example)}</p>
-        </article>
+      const plan = getWordPlan(dayId);
+      const newStart = (plan.dayNumber - 1) * WORDS_PER_DAY + 1;
+      const newEnd = Math.min(newStart + plan.newWords.length - 1, WORD_BANK_666.length);
+      const reviewCards = plan.reviewGroups.map(group => `
+        <div class="review-row">
+          <b>复习 Day ${group.day} 新词（D+${group.offset}）</b>
+          <div class="tags">${renderWordTags(group.words)}</div>
+        </div>
       `).join("");
-      return `<section class="section"><h3>英语拆词卡</h3><div class="vocab-grid">${cards || emptyBlock()}</div></section>`;
+
+      return `
+        <section class="section">
+          <article class="card word-plan">
+            <h3>英语666词任务</h3>
+            <p>不建议给基础弱的孩子每天递增新词量。每天固定约15个新词，真正增加的是复习次数：D+1、D+2、D+4、D+7、D+15、D+30。</p>
+            <div class="word-plan-grid">
+              <div class="review-row">
+                <b>今日新词 ${newStart}-${newEnd}（${plan.newWords.length}个）</b>
+                <div class="tags">${renderWordTags(plan.newWords)}</div>
+              </div>
+              <div class="review-list">
+                ${reviewCards || `<div class="review-row"><b>今日复习</b><p>Day ${plan.dayNumber} 先只学新词，明天开始进入艾宾浩斯复习。</p></div>`}
+              </div>
+            </div>
+            <p>背法沿用拆词、前后缀、词根、熟词联想和场景记忆：每个词只做“看词、读一遍、说中文、找一个线索”。复习词只快速认读，不要求全部默写。</p>
+          </article>
+        </section>
+      `;
     }
 
     function renderEnglishMission(day, dayId) {
@@ -1921,21 +2341,65 @@
       `;
     }
 
+    function buildChineseQuestions(day) {
+      const item = day.chinese;
+      const text = item.chineseCatalog?.text || "今天的文本";
+      const genre = item.chineseCatalog?.genre || "文本";
+      return [
+        {
+          title: "第1题 画面定位",
+          mission: item.mission,
+          answerFormat: item.answerFormat,
+          sampleAnswer: item.sampleAnswer
+        },
+        {
+          title: "第2题 关键词捕捉",
+          mission: `从《${text}》里抓一个最有画面感的词，不用解释很长。`,
+          answerFormat: "我抓到的关键词是____，它让我想到____。",
+          sampleAnswer: "我抓到的关键词是“春”，它让我想到一张慢慢亮起来的地图。"
+        },
+        {
+          title: "第3题 氛围判断",
+          mission: `判断这段${genre}给人的感觉，更偏明亮、安静、辽阔、温和还是有力量。`,
+          answerFormat: "这段文字的感觉更像____，因为____。",
+          sampleAnswer: "这段文字的感觉更像温和的晨光，因为它让画面慢慢亮起来。"
+        },
+        {
+          title: "第4题 镜头顺序",
+          mission: "把文字想成一段镜头，写出先看到什么，再看到什么。",
+          answerFormat: "镜头先看到____，再看到____。",
+          sampleAnswer: "镜头先看到远处的光，再看到近处慢慢清楚的景物。"
+        },
+        {
+          title: "第5题 星图命名",
+          mission: "给今天这段文字起一个地图名，并写一句理由。",
+          answerFormat: "我会把这张地图叫____，理由是____。",
+          sampleAnswer: "我会把这张地图叫春光入口，理由是它像一次新的出发。"
+        }
+      ];
+    }
+
     function renderChinese(dayId, day) {
       const item = day.chinese;
+      const questions = buildChineseQuestions(day);
       return `
         <section class="section">
-          <h3>语文打字填空</h3>
+          <h3>语文打字填空（5题）</h3>
           <div class="grid two">
-            <article class="card fill-card">
-              <h4>${escapeHtml(item.title)}</h4>
-              <p><b>时间：</b>${escapeHtml(item.time)}</p>
-              <p><b>任务：</b>${escapeHtml(item.mission)}</p>
-              ${renderChineseFillPrompt(dayId, item)}
-              <p><b>小参考：</b>${escapeHtml(item.sampleAnswer)}</p>
-            </article>
+            <div class="chinese-question-list">
+              ${questions.map((question, index) => `
+                <article class="card fill-card chinese-question" data-chinese-question="${index + 1}">
+                  <h4>${escapeHtml(question.title)}</h4>
+                  <p><b>任务：</b>${escapeHtml(question.mission)}</p>
+                  ${renderChineseFillPrompt(dayId, question)}
+                  <p><b>小参考：</b>${escapeHtml(question.sampleAnswer)}</p>
+                </article>
+              `).join("")}
+            </div>
             <article class="card">
               <h4>目录对应</h4>
+              <p><b>今日任务：</b>${escapeHtml(item.title)}</p>
+              <p><b>时间：</b>${escapeHtml(item.time)}</p>
               <p><b>单元：</b>${escapeHtml(item.chineseCatalog.unit)}</p>
               <p><b>课文：</b>${escapeHtml(item.chineseCatalog.text)}</p>
               <p><b>体裁：</b>${escapeHtml(item.chineseCatalog.genre)}</p>
@@ -1986,9 +2450,11 @@
 
     function renderReflectionContent(day, submission = null) {
       const summary = submission?.summary ? `<p><b>完成记录：</b>${escapeHtml(submission.summary)}</p>` : "";
+      const encouragement = submission?.encouragement || randomSubmitEncouragement();
       return `
         <h4>当天复盘</h4>
         ${summary}
+        <p><b>今日鼓励：</b>${escapeHtml(encouragement)}</p>
         <p>${escapeHtml(day.review)}</p>
         <p><b>完成奖励：</b>${escapeHtml(day.reward)}</p>
         <p><b>明天的小调整：</b>${escapeHtml(day.tracking.nextDayAdjustment)}</p>
@@ -2013,6 +2479,10 @@
           </article>
         </section>
       `;
+    }
+
+    function randomSubmitEncouragement() {
+      return SUBMIT_ENCOURAGEMENTS[Math.floor(Math.random() * SUBMIT_ENCOURAGEMENTS.length)];
     }
 
     function emptyBlock(text = "没有匹配内容") {
@@ -2172,6 +2642,11 @@
       const answered = questions.filter(card => card.classList.contains("answered")).length;
       const blanks = [...contentEl.querySelectorAll(".chinese-blank")];
       const filled = blanks.filter(input => input.value.trim()).length;
+      const chineseQuestions = [...contentEl.querySelectorAll(".chinese-question")];
+      const chineseDone = chineseQuestions.filter(card => {
+        const inputs = [...card.querySelectorAll(".chinese-blank")];
+        return inputs.length > 0 && inputs.every(input => input.value.trim());
+      }).length;
       const schulteSections = [...contentEl.querySelectorAll(".schulte-section")];
       const schulteDone = schulteSections.filter(section => section.classList.contains("schulte-complete")).length;
       return {
@@ -2179,6 +2654,8 @@
         questionTotal: questions.length,
         filled,
         blankTotal: blanks.length,
+        chineseDone,
+        chineseTotal: chineseQuestions.length,
         schulteDone,
         schulteTotal: schulteSections.length
       };
@@ -2187,7 +2664,7 @@
     function buildSubmitSummary(progress) {
       const parts = [];
       if (progress.questionTotal) parts.push(`选择题 ${progress.answered}/${progress.questionTotal}`);
-      if (progress.blankTotal) parts.push(`语文填空 ${progress.filled}/${progress.blankTotal}`);
+      if (progress.chineseTotal) parts.push(`语文题 ${progress.chineseDone}/${progress.chineseTotal}`);
       if (progress.schulteTotal) parts.push(`舒尔特方格 ${progress.schulteDone}/${progress.schulteTotal}`);
       return parts.length ? parts.join("，") : "已完成今日页面";
     }
@@ -2201,7 +2678,8 @@
       const summary = buildSubmitSummary(progress);
       dailySubmissions[dayId] = {
         submittedAt: new Date().toISOString(),
-        summary
+        summary,
+        encouragement: randomSubmitEncouragement()
       };
       saveDailySubmissions();
       renderStats();
@@ -2225,20 +2703,24 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    subjectFilterEl.addEventListener("click", event => {
-      const button = event.target.closest("button[data-subject]");
-      if (!button) return;
-      state.subject = button.dataset.subject;
-      subjectFilterEl.querySelectorAll("button").forEach(item => {
-        item.setAttribute("aria-pressed", String(item === button));
+    if (subjectFilterEl) {
+      subjectFilterEl.addEventListener("click", event => {
+        const button = event.target.closest("button[data-subject]");
+        if (!button) return;
+        state.subject = button.dataset.subject;
+        subjectFilterEl.querySelectorAll("button").forEach(item => {
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        render();
       });
-      render();
-    });
+    }
 
-    searchEl.addEventListener("input", event => {
-      state.search = event.target.value;
-      render();
-    });
+    if (searchEl) {
+      searchEl.addEventListener("input", event => {
+        state.search = event.target.value;
+        render();
+      });
+    }
 
     contentEl.addEventListener("click", event => {
       const optionButton = event.target.closest(".option-btn");
